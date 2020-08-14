@@ -2,7 +2,10 @@
   "name": "aba-cli",
   "description": "automate boring stuff in node js, react and react native",
   "version": "0.0.0",
-  "author": "Erfan Yousefifar",
+  "author":{"name": "erfan yousefifar", "email": "eyousefiar@gmail.com", "url": "https://github.com/eyousefifar"},
+
+  "contributers": [ {"name": "alireza vafaei", "email": "alirezabin1998@gmail.com", "url": "https://github.com/alirezabin1998"},
+    {"name": "hadi najafi", "email": "hadinajafi.77@gmail.com", "url": "https://github.com/hadinajafi"}],
   "bin": {
     "aba": "./bin/run"
   },
