@@ -19,11 +19,11 @@ export default class Audit extends Command {
 
     let audit = exec(command, (error:any, stdout:any, stdin: any) => {
       if(error) this.log(error);
-      this.log(stdout);
-      this.log(stdin);
+      this.log(stdout); //show output & dependency result
+      //TODO: format stdout to a better look & feel.
     });
 
-    audit.on(this.exit, (code: number)=> {
+    audit.on('exit', (code: number)=> {
       this.log('process exited with code: ' + code);
     })
   }
