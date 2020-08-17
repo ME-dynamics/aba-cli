@@ -1,18 +1,15 @@
 import { Command, flags } from "@oclif/command";
 import { cli } from "cli-ux";
 import { join } from "path";
-import {
-  createDir,
-  downloadTemplate,
-  unzip,
-  moveToParent,
-  packageCommand,
-  updatePackageJson,
-  jsonDB,
-} from "../utils";
+
+import { db } from "../db";
+import { createDir, moveTemplateFiles } from "../dir";
+import { packageCommand, updatePackageJson } from "../packageManager";
+import { downloadTemplate, unzip } from "../utils";
+
 export default class Create extends Command {
   static description = "creates node js clean architecture micro service";
-  static examples = [`$ nca create yourServiceName`];
+  static examples = [`$ aba create yourServiceName`];
 
   // static flags = {
   //   help: flags.help({ char: "h" }),
@@ -22,14 +19,41 @@ export default class Create extends Command {
   //   force: flags.boolean({ char: "f" }),
   // };
 
-  static args = [{ name: "serviceName" }];
+  static args = [
+    {
+      name: "mode",
+      required: true,
+      description: "choose what to create",
+      hidden: false,
+      options: [
+        "service",
+        "nodelib",
+        "entity",
+        "usecase",
+        "controller",
+        "interface",
+        "adapters",
+        "schema",
+      ], // only allow input to be from a discrete set
+    },
+    {
+      name: "packageName",
+      required: true,
+      description: "the package name you want to create",
+      hidden: false,
+    },
+  ];
 
   async run() {
     const { args, flags } = this.parse(Create);
-    const { serviceName } = args;
-    cli.action.start(`creating ${serviceName} service`);
+    const { mode, packageName } = args;
+    if (mode === "service") {
+      this.log('service'); // TODO: make separated actions 
+      return;
+    }
+    cli.action.start(`creating ${packageName} service`);
     try {
-      await createDir(serviceName);
+      await createDir(packageName);
     } catch (error) {
       if (error.code === "EEXIST") {
         cli.action.stop("something is wrong");
@@ -52,7 +76,7 @@ export default class Create extends Command {
     await cli.wait(512);
     if (file) {
       try {
-        await unzip(file, serviceName);
+        await unzip(file, packageName);
       } catch (error) {
         cli.action.stop("something is wrong");
         this.error(error);
@@ -61,7 +85,7 @@ export default class Create extends Command {
     cli.action.stop("file unzipped!");
     cli.action.start("some cleaning");
     try {
-      await moveToParent(serviceName);
+      await moveTemplateFiles(packageName);
     } catch (error) {
       cli.action.stop("something is wrong");
       this.error(error);
@@ -71,8 +95,8 @@ export default class Create extends Command {
     cli.action.start("updating package json");
     try {
       const rootPath = process.cwd();
-      const path = join(rootPath, serviceName);
-      await updatePackageJson(path, serviceName);
+      const path = join(rootPath, packageName);
+      await updatePackageJson(path, packageName);
     } catch (error) {
       cli.action.stop("something is wrong");
       this.error(error);
@@ -88,15 +112,11 @@ export default class Create extends Command {
     );
     try {
       const rootPath = process.cwd();
-      const path = join(rootPath, serviceName);
+      const path = join(rootPath, packageName);
       // const entityPath = join(path, 'packages', 'entities');
       process.chdir(path);
-      await packageCommand({mode: "install", packageManager});
-      const db = jsonDB();
-      db.set.packageManager(packageManager);
-      // process.chdir(entityPath);
-      // await packageInstall(packageManager);
-      // process.chdir(rootPath);
+      await packageCommand({ mode: "install" });
+   
     } catch (error) {
       this.error(error.message);
     }
