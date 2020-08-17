@@ -1,13 +1,22 @@
 export type TLayers =
   | "entities"
-  | "usecase"
+  | "usecases"
   | "controllers"
-  | "interface"
-  | "infra"
-  | "global";
+  | "interfaces"
+  | "adapters"
+  | "schema"
+  | "global"
+  | "dev";
 
   export interface ISetPackage {
     status: "alreadyInstalled" | "added" | "conflict";
     error?: string;
   }
   
+
+
+  export interface IParams {
+    mode: "install" | "addPackage"| "remove";
+    packageName?: string;
+    
+  }
