@@ -29,9 +29,9 @@
     "@oclif/plugin-help": "^3",
     "cli-ux": "^5.4.10",
     "fs-extra": "^9.0.1",
+    "nedb": "^1.8.0",
     "node-fetch": "^2.6.0",
     "semver": "^7.3.2",
-    "sqlite3": "^5.0.0",
     "tslib": "^1",
     "unzipper": "^0.10.11",
     "uuid": "^8.3.0"
@@ -39,10 +39,10 @@
   "devDependencies": {
     "@oclif/dev-cli": "^1",
     "@types/fs-extra": "^9.0.1",
+    "@types/nedb": "^1.8.10",
     "@types/node": "^14.0.27",
     "@types/node-fetch": "^2.5.7",
     "@types/semver": "^7.3.2",
-    "@types/sqlite3": "^3.1.6",
     "@types/unzipper": "^0.10.3",
     "@types/uuid": "^8.3.0",
     "eslint": "^5.13",
