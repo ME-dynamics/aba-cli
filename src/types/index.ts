@@ -1,3 +1,3 @@
 export { IValidDirectory } from "./dir";
-export { ISetPackage, TLayers } from "./packageManager";
+export { ISetPackage, TLayers, IParams } from "./packageManager";
 export { IDbClient, IAdd, IPackage } from "./db";
