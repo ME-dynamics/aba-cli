@@ -6,8 +6,8 @@ import { buildAdd } from "./add";
 import { buildFindById } from "./findById";
 
 export async function db(serviceName: string) {
-  //   switchToRoot();
-  // TODO: switch to root directory on production cli
+  switchToRoot();
+  
   const db = new nedb({ filename: `./${serviceName}Db`, autoload: true });
 
   const add = buildAdd({ db });
