@@ -1,26 +1,22 @@
-import { Database, RunResult } from 'sqlite3';
+import * as nedb from 'nedb';
 import { TLayers } from '../utils/types';
 
-export type TRan = RunResult;
 
 export interface IDbClient {
-    db: Database
+    db: nedb
 }
 
 
-export type TRun =  (sql: string, params?: any[] | Record<string, unknown> ) => Promise<TRan>;
+// export type TRun =  (sql: string, params?: any[] | Record<string, unknown> ) => Promise<TRan>;
 
-export interface IBuildInitDb {
-    run: TRun;
-    
-}
 
-export interface IBuildAdd {
-    run: TRun;
-}
 export interface IAdd {
     packageName: string;
     version?: string;
     dev: boolean;
     layer: TLayers;
+}
+
+export interface IPackage extends IAdd {
+    id: string;
 }
