@@ -1,5 +1,5 @@
 import * as nedb from 'nedb';
-import { TLayers } from '../utils/types';
+import { TLayers } from './packageManager';
 
 
 export interface IDbClient {
