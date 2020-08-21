@@ -1,12 +1,6 @@
 import { Command, flags } from "@oclif/command";
-import { cli } from "cli-ux";
-import { join } from "path";
-
-import { db } from "../db";
-import { createDir, moveTemplateFiles } from "../dir";
-import { packageCommand, updatePackageJson } from "../packageManager";
-import { downloadTemplate, unzip } from "../utils";
-
+import { createLib } from "../commandActions";
+import { IError, ILog } from "../types";
 export default class Create extends Command {
   static description = "creates node js clean architecture micro service";
   static examples = [`$ aba create yourServiceName`];
@@ -28,98 +22,66 @@ export default class Create extends Command {
       options: [
         "service",
         "nodelib",
+        "rrn",
         "entity",
         "usecase",
-        "controller",
-        "interface",
-        "adapters",
+        "adapter",
         "schema",
       ], // only allow input to be from a discrete set
     },
     {
-      name: "packageName",
+      name: "name",
       required: true,
-      description: "the package name you want to create",
+      description: "the package / layer name you want to create",
       hidden: false,
     },
   ];
-
+  logErr = (args: IError) => {
+    const { err, errCode } = args;
+    this.error(err, { code: errCode });
+  };
+  logInfo = (args: ILog) => {
+    const { message } = args;
+    this.log(message);
+  };
   async run() {
     const { args, flags } = this.parse(Create);
-    const { mode, packageName } = args;
+    const { mode, name } = args;
     if (mode === "service") {
-      this.log('service'); // TODO: make separated actions 
-      return;
+      const serviceMode = "service";
+      const serviceName = `${name}`;
+      await createLib({
+        name: serviceName,
+        mode: serviceMode,
+        error: this.logErr,
+        log: this.logInfo,
+      });
+    } else if (mode === "nodelib"){
+      const serviceMode = "nodelib";
+      const serviceName = `${name}`;
+      await createLib({
+        name: serviceName,
+        mode: serviceMode,
+        error: this.logErr,
+        log: this.logInfo,
+      });
+    } else if (mode === "rrn"){
+      const serviceMode = "rrn";
+      const serviceName = `${name}`;
+      await createLib({
+        name: serviceName,
+        mode: serviceMode,
+        error: this.logErr,
+        log: this.logInfo,
+      });
+    } else if (mode === "entity") {
+
+    } else if (mode === "usecase") {
+
+    } else if (mode === "adapter") {
+
+    } else if (mode === "schema") {
+
     }
-    cli.action.start(`creating ${packageName} service`);
-    try {
-      await createDir(packageName);
-    } catch (error) {
-      if (error.code === "EEXIST") {
-        cli.action.stop("something is wrong");
-        this.error("service already exist");
-      }
-    }
-    await cli.wait(512);
-    cli.action.stop("created");
-    await cli.wait(512);
-    cli.action.start("downloading node clean architecture template");
-    let file: Buffer | undefined;
-    try {
-      file = await downloadTemplate();
-    } catch (error) {
-      cli.action.stop("something is wrong");
-      this.error(error);
-    }
-    cli.action.stop("download completed");
-    cli.action.start("unzipping file");
-    await cli.wait(512);
-    if (file) {
-      try {
-        await unzip(file, packageName);
-      } catch (error) {
-        cli.action.stop("something is wrong");
-        this.error(error);
-      }
-    }
-    cli.action.stop("file unzipped!");
-    cli.action.start("some cleaning");
-    try {
-      await moveTemplateFiles(packageName);
-    } catch (error) {
-      cli.action.stop("something is wrong");
-      this.error(error);
-    }
-    await cli.wait(512);
-    cli.action.stop("done");
-    cli.action.start("updating package json");
-    try {
-      const rootPath = process.cwd();
-      const path = join(rootPath, packageName);
-      await updatePackageJson(path, packageName);
-    } catch (error) {
-      cli.action.stop("something is wrong");
-      this.error(error);
-    }
-    await cli.wait(512);
-    cli.action.stop("package.json updated");
-    cli.action.start("installing packages");
-    const packageManager:
-      | "yarn"
-      | "npm" = await cli.prompt(
-      "which package manager do you prefer? (yarn, npm)",
-      { default: "yarn" }
-    );
-    try {
-      const rootPath = process.cwd();
-      const path = join(rootPath, packageName);
-      // const entityPath = join(path, 'packages', 'entities');
-      process.chdir(path);
-      await packageCommand({ mode: "install" });
-   
-    } catch (error) {
-      this.error(error.message);
-    }
-    cli.action.stop("installed");
   }
 }
