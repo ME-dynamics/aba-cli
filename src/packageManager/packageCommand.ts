@@ -1,27 +1,25 @@
 import { spawn } from "child_process";
 import { yarnExists } from "./yarnExists";
-import { IParams} from "../types";
-function getParams(args: IParams): string[] {
-  const { mode,  packageName } = args;
-  if (mode !== "install" && !packageName) throw new Error("should define package name");
+import { IPackageMode } from "../types";
+function getParams(args: IPackageMode): string[] {
+  const { mode, packageName } = args;
+  if (mode !== "install" && !packageName)
+    throw new Error("should define package name");
 
   if (mode === "remove" && packageName) {
-    
-    return ["remove", packageName];;
-  } 
+    return ["remove", packageName];
+  }
   if (mode === "install") return ["install"];
-  
+
   if (mode === "addPackage" && packageName) {
- 
-    return ["add", packageName];;
+    return ["add", packageName];
   } else {
     throw new Error(`invalid mode: ${mode}`);
   }
 }
 
-export async function packageCommand(args: IParams) {
-  
-  const yarnCheck =  await yarnExists();
+export async function packageCommand(args: IPackageMode) {
+  const yarnCheck = await yarnExists();
   
   if (yarnCheck) {
     const params = getParams(args);
