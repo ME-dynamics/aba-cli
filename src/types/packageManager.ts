@@ -4,7 +4,7 @@ export type TLayers =
   | "controllers"
   | "interfaces"
   | "adapters"
-  | "schema"
+  | "schemas"
   | "global"
   | "dev";
 
@@ -15,7 +15,7 @@ export type TLayers =
   
 
 
-  export interface IParams {
+  export interface IPackageMode {
     mode: "install" | "addPackage"| "remove";
     packageName?: string;
     
