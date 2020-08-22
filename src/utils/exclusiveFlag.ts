@@ -16,7 +16,7 @@ export function exclusiveFlag(flag: TLayers) {
     "adapters",
     "global",
     "dev",
-    "schema",
+    "schemas",
   ];
   const filter = (item: string) => {
     return item !== flag;
