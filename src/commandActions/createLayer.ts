@@ -10,7 +10,11 @@ import { ICreateLayer, IValidDirectory, TError, TLayers } from "../types";
 import { isValidDirectory } from "../dir";
 import { join } from "path";
 
-function pathToLayer(isValidDir: IValidDirectory, error: TError, layer: TLayers): string {
+function pathToLayer(
+  isValidDir: IValidDirectory,
+  error: TError,
+  layer: TLayers
+): string {
   let path = "";
   if (isValidDir.base === "root") {
     path = join(process.cwd(), "packages", layer);
@@ -49,24 +53,30 @@ export function createLayer(args: ICreateLayer) {
     const entityFile = entityLayer(name);
     let entityPath = pathToLayer(isValidDir, error, "entities");
     try {
-      writeFileSync(entityPath, entityFile);
+      writeFileSync(`${entityPath}/${name}.ts`, entityFile);
     } catch (err) {
-      error(err);
+   
+      error({err: err});
     }
   } else if (mode === "usecase") {
-    if(!httpVerb) throw new Error("when creating use case, http verb must be defined");
+    if (!httpVerb)
+      throw new Error("when creating use case, http verb must be defined");
     const usecase = usecaseLayer(name);
     const controller = controllerLayer(usecase.usecaseName, httpVerb);
-    const interfaceFile = interfaceLayer(controller.controllerName, usecase.usecaseName);
+    const interfaceFile = interfaceLayer(
+      controller.controllerName,
+      usecase.usecaseName
+    );
     const usecasePath = pathToLayer(isValidDir, error, "usecases");
     const controllerPath = pathToLayer(isValidDir, error, "controllers");
     const interfacePath = pathToLayer(isValidDir, error, "interfaces");
     try {
-        writeFileSync(usecasePath, usecase.usecaseFile);
-        writeFileSync(controllerPath, controller.controllerFile);
-        writeFileSync(interfacePath, interfaceFile);
-    } catch (error) {
-        error(error);
+      writeFileSync(`${usecasePath}/${name}.ts`, usecase.usecaseFile);
+      writeFileSync(`${controllerPath}/${controller.controllerName}.ts`, controller.controllerFile);
+      writeFileSync(`${interfacePath}/${name}.ts`, interfaceFile);
+      cli.action.stop(`${name} created`);
+    } catch (err) {
+      error({err});
     }
   } else if (mode === "adapter") {
   } else if (mode === "schema") {
