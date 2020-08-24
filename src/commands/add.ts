@@ -33,61 +33,41 @@ export default class Add extends Command {
   async run() {
     const { args, flags } = this.parse(Add);
     const { packageName } = args;
-    //cli.action.start('adding package ...');
-
+    const {} = flags;
+    cli.action.start('adding package ...');
+    //TODO: use result to show detailed result
     let result;
     try{
       if (flags.entity){
-        result = await typedi([packageName]).then(() => {
-          this.log("type added successfully into entity.");
-        })
-        .catch((error) => {
-          this.error(`An Error occured adding type ${packageName} into entity:\n${error}`);
-        })
+        result = await typedi([packageName]);
+        this.log("type added successfully into entity.");
       }
       if (flags.usecase){
-        result = await typedi([packageName]).then(() => {
-          this.log("type added successfully into usecase.");
-        })
-        .catch((error) => {
-          this.error(`An Error occured adding type ${packageName} into usecase:\n${error}`);
-        })
+        result = await typedi([packageName]);
+        this.log("type added successfully into usecase.");
       }
       if(flags.controllers){
-        result = await typedi([packageName]).then(() => {
-          this.log("type added successfully into controllers.");
-        })
-        .catch((error) => {
-          this.error(`An Error occured adding type ${packageName} into controllers:\n${error}`);
-        })
+        result = await typedi([packageName]);
+        this.log("type added successfully into controllers.");
       }
       if (flags.interface) {
-        result = await typedi([packageName]).then(() => {
-          this.log("type added successfully into interface.");
-        })
-        .catch((error) => {
-          this.error(`An Error occured adding type ${packageName} into interface:\n${error}`);
-        })
+        result = await typedi([packageName]);
+        this.log("type added successfully into interface.");
       }
       if(flags.global){
-        result = await typedi([packageName]).then(() => {
-          this.log("type added successfully into global.");
-        })
-        .catch((error) => {
-          this.error(`An Error occured adding type ${packageName} into global:\n${error}`);
-        })
+        result = await typedi([packageName]);
+        this.log("type added successfully into global.");
       }
        if (flags.dev){
-        result = await typedi([packageName], {dev: true}).then(() => {
-          this.log("type added successfully into dev.");
-        })
-        .catch((error) => {
-          this.error(`An Error occured adding type ${packageName} into dev:\n${error}`);
-        })
+        result = await typedi([packageName], {dev: true});
+        this.log("type added successfully into dev.");
        }
+
+       cli.action.stop('packages added successfully');
     }
     catch(err){
       this.error(err);
+      cli.action.stop(`couldn\'t install package ${packageName}`)
     }
 //     let result;
 //     if (flags.entity) {
@@ -108,14 +88,7 @@ export default class Add extends Command {
 //     } else {
 //       this.error('you must specify where to install package, like -e for entities');
 //     }
-//     if(result.status === "added") {
-//       cli.action.stop('done');
-//     } else if (result.status === "alreadyInstalled") {
-//       cli.action.stop(result.status);
-//     } else {
-//       cli.action.stop(result.status);
-//       result.error && this.error(result.error)
-//     }
+
 
   }
 }
