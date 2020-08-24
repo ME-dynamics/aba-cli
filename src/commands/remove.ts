@@ -1,9 +1,10 @@
 import { Command } from "@oclif/command";
 import { cli } from "cli-ux";
-import { exec } from "child_process";
+import { execSync } from "child_process";
+import {packageInfo } from '../packageManager';
 export default class Remove extends Command {
   static description = "remove package from your nca project";
-
+  static strict = false;
   static args = [
     {
       name: "packageName",
@@ -14,16 +15,14 @@ export default class Remove extends Command {
   ];
 
   async run() {
-    const { args } = this.parse(Remove);
-    const { packageName } = args;
-    const command = `yarn remove ${packageName}`;
+    const { argv } = this.parse(Remove);
+    const packages = argv.join(" ");
+    const command = `yarn remove ${packages}`;
     // TODO: remove types as well
-    cli.action.start(`removing package ${packageName}`);
+    cli.action.start(`removing packages: ${packages}`);
     try {
-      exec(command, (error: any, stdout: any, stdin: any) => {
-        if (error) this.log(error);
-        this.log(stdout);
-      });
+      const executed = execSync(command);
+      await packageInfo({argv, dev: false, layer: "global", mode: "remove"}); 
     } catch (error) {
       cli.action.stop("remove failed");
       this.error(error);
