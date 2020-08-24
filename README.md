@@ -20,7 +20,7 @@ $ npm install -g aba-cli
 $ aba COMMAND
 running command...
 $ aba (-v|--version|version)
-aba-cli/0.0.0 linux-x64 node-v12.18.3
+aba-cli/1.0.0 linux-x64 node-v12.18.3
 $ aba --help [COMMAND]
 USAGE
   $ aba COMMAND
@@ -29,28 +29,74 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`aba hello [FILE]`](#aba-hello-file)
+* [`aba add PACKAGENAME`](#aba-add-packagename)
+* [`aba audit`](#aba-audit)
+* [`aba create MODE NAME`](#aba-create-mode-name)
 * [`aba help [COMMAND]`](#aba-help-command)
+* [`aba remove PACKAGENAME`](#aba-remove-packagename)
 
-## `aba hello [FILE]`
-
-describe the command here
+## `aba add PACKAGENAME`
 
 ```
 USAGE
-  $ aba hello [FILE]
+  $ aba add PACKAGENAME
+
+ARGUMENTS
+  PACKAGENAME  names of npm package you want to add to your nca project
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-
-EXAMPLE
-  $ aba hello
-  hello world from ./src/hello.ts!
+  -c, --controllers  will save package info in controllers section
+  -d, --dev          will save package info in development section
+  -e, --entity       will save package info in entities section
+  -g, --global       will save package info in global section
+  -i, --interface    will save package info in interface section
+  -u, --usecase      will save package info in usecase section
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/eyousefifar/aba-cli/blob/v0.0.0/src/commands/hello.ts)_
+_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v1.0.0/src/commands/add.ts)_
+
+## `aba audit`
+
+```
+USAGE
+  $ aba audit
+
+OPTIONS
+  -g, --groups=groups  Applying the groups flag will limit the audit table to vulnerabilities of the corresponding
+                       dependency groups (e.g dependencies,devDependencies)
+
+  -j, --json           Shows dependencies vulnerabilities in JSON format
+
+  -l, --level=level    [default: info] shows vulnerabilities impact level, low, medium, high etc.
+
+  -v, --verbose        Shows dependencies vulnerabilities in JSON format as well as response data
+```
+
+_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v1.0.0/src/commands/audit.ts)_
+
+## `aba create MODE NAME`
+
+creates node js clean architecture, nca layers, node libraries and react + react native project
+
+```
+USAGE
+  $ aba create MODE NAME
+
+ARGUMENTS
+  MODE  (service|nodelib|rrn|entity|usecase|adapter|schema) choose what to create
+  NAME  the package / layer name you want to create
+
+EXAMPLES
+  $ aba create service serviceName
+  $ aba create nodelib libName
+  $ aba create rrn rrnName
+  $ aba create entity entityName
+  $ aba create usecase usecaseName
+  $ aba create adapter adapterName
+  $ aba create schema schemaName
+```
+
+_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v1.0.0/src/commands/create.ts)_
 
 ## `aba help [COMMAND]`
 
@@ -68,4 +114,18 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.0/src/commands/help.ts)_
+
+## `aba remove PACKAGENAME`
+
+remove package from your nca project
+
+```
+USAGE
+  $ aba remove PACKAGENAME
+
+ARGUMENTS
+  PACKAGENAME  name of npm module you want to remove from your nca project
+```
+
+_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v1.0.0/src/commands/remove.ts)_
 <!-- commandsstop -->
