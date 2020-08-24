@@ -1,94 +1,130 @@
 import { Command, flags } from "@oclif/command";
-import { exclusiveFlag } from "../utils";
-import { cli } from 'cli-ux';
-import typedi from 'typed-install';
+import { cli } from "cli-ux";
+import typedi from "typed-install";
+
+import { db } from "../db";
+import { exclusiveFlag, readPackageJson } from "../utils";
+import { TLayers } from "../types";
 
 export default class Add extends Command {
-//   static description = "add and managing packages";
+  //   static description = "add and managing packages";
 
   static flags = {
     // help: flags.help({ char: "h" }),
-    entity: flags.boolean({ char: "e", exclusive: exclusiveFlag("entities") }),
-    usecase: flags.boolean({ char: "u", exclusive: exclusiveFlag("usecases") }),
+    entity: flags.boolean({
+      char: "e",
+      exclusive: exclusiveFlag("entities"),
+      description: "will save package info in entities section",
+    }),
+    usecase: flags.boolean({
+      char: "u",
+      exclusive: exclusiveFlag("usecases"),
+      description: "will save package info in usecase section",
+    }),
     controllers: flags.boolean({
       char: "c",
       exclusive: exclusiveFlag("controllers"),
+      description: "will save package info in controllers section",
     }),
     interface: flags.boolean({
       char: "i",
       exclusive: exclusiveFlag("interfaces"),
+      description: "will save package info in interface section",
     }),
-    global: flags.boolean({ char: "g", exclusive: exclusiveFlag("global") }),
-    dev: flags.boolean({char: 'd', exclusive: exclusiveFlag('dev')})
+    global: flags.boolean({
+      char: "g",
+      exclusive: exclusiveFlag("global"),
+      description: "will save package info in global section",
+    }),
+    dev: flags.boolean({
+      char: "d",
+      exclusive: exclusiveFlag("dev"),
+      description: "will save package info in development section",
+    }),
   };
-
+  static strict = false;
   static args = [
     {
       name: "packageName",
       required: true,
-      description: "name of js module you want to add to NCA",
+      description: "names of npm package you want to add to your nca project",
     },
   ];
 
+  savePackages = async (argv: string[], dev: boolean, layer: TLayers) => {
+    const pkgJson = readPackageJson();
+    const database = await db(pkgJson.name);
+    for (let index = 0; index < argv.length; index++) {
+      const packages = dev
+        ? Object.keys(pkgJson.devDependencies)
+        : Object.keys(pkgJson.dependencies);
+      const packageName = argv[index];
+      if (packages.includes(packageName)) {
+        const version = dev
+          ? pkgJson.devDependencies[packageName]
+          : pkgJson.dependencies[packageName];
+        await database.add({ packageName, dev, layer, version });
+      } else {
+        throw new Error(
+          `there was a problem in installing package: ${packageName}`
+        );
+      }
+    }
+  };
   async run() {
-    const { args, flags } = this.parse(Add);
-    const { packageName } = args;
-    const {} = flags;
-    cli.action.start('adding package ...');
-    //TODO: use result to show detailed result
-    let result;
-    try{
-      if (flags.entity){
-        result = await typedi([packageName]);
-        this.log("type added successfully into entity.");
-      }
-      if (flags.usecase){
-        result = await typedi([packageName]);
-        this.log("type added successfully into usecase.");
-      }
-      if(flags.controllers){
-        result = await typedi([packageName]);
-        this.log("type added successfully into controllers.");
-      }
-      if (flags.interface) {
-        result = await typedi([packageName]);
-        this.log("type added successfully into interface.");
-      }
-      if(flags.global){
-        result = await typedi([packageName]);
-        this.log("type added successfully into global.");
-      }
-       if (flags.dev){
-        result = await typedi([packageName], {dev: true});
-        this.log("type added successfully into dev.");
-       }
+    const { argv, flags } = this.parse(Add);
+    // const { packageName } = args;
+    const { entity, controllers, dev, global, usecase } = flags;
+    const interfaceLayer = flags.interface;
 
-       cli.action.stop('packages added successfully');
-    }
-    catch(err){
+    cli.action.start("adding package ...");
+
+    try {
+      if (entity) {
+        await typedi(argv);
+        await this.savePackages(argv, false, "entities");
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into entity section`
+        );
+      } else if (usecase) {
+        await typedi(argv);
+        await this.savePackages(argv, false, "usecases");
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into usecase section`
+        );
+      } else if (controllers) {
+        await this.savePackages(argv, false, "controllers");
+        await typedi(argv);
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into controllers section`
+        );
+      } else if (interfaceLayer) {
+        await this.savePackages(argv, false, "interfaces");
+        await typedi(argv);
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into interface section`
+        );
+      } else if (global) {
+        await typedi(argv);
+        await this.savePackages(argv, false, "global");
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into global section`
+        );
+      } else if (dev) {
+        await typedi(argv, { dev: true });
+        await this.savePackages(argv, false, "dev");
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into development section`
+        );
+      } else {
+        this.error(
+          "you should define the scope you want the package to be installed"
+        );
+      }
+      cli.action.stop();
+    } catch (err) {
+      cli.action.stop(`couldn\'t install package ${argv.toString()}`);
       this.error(err);
-      cli.action.stop(`couldn\'t install package ${packageName}`)
     }
-//     let result;
-//     if (flags.entity) {
-//       result = await addPackage("entities", packageName);
-//     } else if (flags.usecase) {
-//       result = await addPackage("usecase", packageName);
-//     } else if (flags.controllers) {
-//       result = await addPackage("controllers", packageName);
-//     } else if (flags.interface) {
-//       result = await addPackage("interface", packageName);
-//     } else if (flags.infra) {
-//       result = await addPackage("infra", packageName);
-//     } else if (flags.global) {
-//       result =await addPackage("global", packageName);
-
-//     } else if (flags.dev) {
-//       result = await addPackage("dev", packageName);
-//     } else {
-//       this.error('you must specify where to install package, like -e for entities');
-//     }
-
-
   }
 }
