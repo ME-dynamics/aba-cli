@@ -79,6 +79,9 @@ export function createLayer(args: ICreateLayer) {
       error({err});
     }
   } else if (mode === "adapter") {
+    // TODO: implement later, for db, events, grpc etc
+    // INFO: these driver mey require libraries so will complete in time
   } else if (mode === "schema") {
+    // TODO: implement later
   }
 }
