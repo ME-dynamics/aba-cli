@@ -82,3 +82,18 @@ export function interfaceLayer(controller: string, usecase: string ) {
         }
     }`
 }
+
+
+export function adapterDbLayer(name: string) {
+    const upperName = firstLetterUpperCase(name);
+    return `// import { } from "../types";
+    export function build${upperName}(injection: any) {
+        // FIXME: replace injection interface and name with your needed values
+        return async function ${name} (value: any): Promise<any> {
+            // FIXME: replace promise value and promise interface and name
+            // TODO: write your db adapter here
+        }
+    }`
+}
+
+
