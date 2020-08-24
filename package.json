@@ -33,6 +33,7 @@
     "node-fetch": "^2.6.0",
     "semver": "^7.3.2",
     "tslib": "^1",
+    "typed-install": "^1.1.1",
     "unzipper": "^0.10.11",
     "uuid": "^8.3.0"
   },
