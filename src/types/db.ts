@@ -20,3 +20,8 @@ export interface IAdd {
 export interface IPackage extends IAdd {
     id: string;
 }
+
+
+export interface IRemove {
+    packageName: string;
+}
