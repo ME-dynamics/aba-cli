@@ -6,7 +6,8 @@ export type TLayers =
   | "adapters"
   | "schemas"
   | "global"
-  | "dev";
+  | "dev"
+  | "none";
 
 export interface ISetPackage {
   status: "alreadyInstalled" | "added" | "conflict";
@@ -22,5 +23,5 @@ export interface IPackageInfo {
   argv: string[];
   dev: boolean;
   layer: TLayers;
-  mode: "add" | "remove"
+  mode: "add" | "remove";
 }
