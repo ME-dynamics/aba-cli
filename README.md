@@ -20,7 +20,7 @@ $ npm install -g aba-cli
 $ aba COMMAND
 running command...
 $ aba (-v|--version|version)
-aba-cli/0.1.0 linux-x64 node-v12.18.3
+aba-cli/0.1.1 linux-x64 node-v12.18.3
 $ aba --help [COMMAND]
 USAGE
   $ aba COMMAND
@@ -31,6 +31,7 @@ USAGE
 <!-- commands -->
 * [`aba add PACKAGENAME`](#aba-add-packagename)
 * [`aba audit`](#aba-audit)
+* [`aba autocomplete [SHELL]`](#aba-autocomplete-shell)
 * [`aba create MODE NAME`](#aba-create-mode-name)
 * [`aba help [COMMAND]`](#aba-help-command)
 * [`aba remove PACKAGENAME`](#aba-remove-packagename)
@@ -53,7 +54,7 @@ OPTIONS
   -u, --usecase      will save package info in usecase section
 ```
 
-_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.0/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.1/src/commands/add.ts)_
 
 ## `aba audit`
 
@@ -72,7 +73,30 @@ OPTIONS
   -v, --verbose        Shows dependencies vulnerabilities in JSON format as well as response data
 ```
 
-_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.0/src/commands/audit.ts)_
+_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.1/src/commands/audit.ts)_
+
+## `aba autocomplete [SHELL]`
+
+display autocomplete installation instructions
+
+```
+USAGE
+  $ aba autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ aba autocomplete
+  $ aba autocomplete bash
+  $ aba autocomplete zsh
+  $ aba autocomplete --refresh-cache
+```
+
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.2.0/src/commands/autocomplete/index.ts)_
 
 ## `aba create MODE NAME`
 
@@ -96,7 +120,7 @@ EXAMPLES
   $ aba create schema schemaName
 ```
 
-_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.0/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.1/src/commands/create.ts)_
 
 ## `aba help [COMMAND]`
 
@@ -127,5 +151,5 @@ ARGUMENTS
   PACKAGENAME  name of npm module you want to remove from your nca project
 ```
 
-_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.0/src/commands/remove.ts)_
+_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.1/src/commands/remove.ts)_
 <!-- commandsstop -->
