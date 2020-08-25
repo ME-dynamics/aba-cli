@@ -28,9 +28,9 @@ export async function createLib(args: ICreateLib) {
   let file: Buffer | undefined;
   try {
     file = await downloadTemplate(mode);
-  } catch (error) {
+  } catch (err) {
     cli.action.stop("something is wrong");
-    error(error);
+    error({err});
   }
   cli.action.stop("download completed");
   cli.action.start("unzipping file");
@@ -38,26 +38,26 @@ export async function createLib(args: ICreateLib) {
   if (file) {
     try {
       await unzip(file, name);
-    } catch (error) {
+    } catch (err) {
       cli.action.stop("something is wrong");
-      error(error);
+      error({err});
     }
   }
   cli.action.stop("file unzipped!");
   cli.action.start("some cleaning");
   try {
     await moveTemplateFiles(name);
-  } catch (error) {
+  } catch (err) {
     cli.action.stop("something is wrong");
-    error(error);
+    error({err});
   }
   cli.action.stop("done");
   cli.action.start("updating package json");
   try {
     await updatePackageJson(name, libTitle);
-  } catch (error) {
+  } catch (err) {
     cli.action.stop("something is wrong");
-    error(error);
+    error({err});
   }
   cli.action.stop("package.json updated");
   cli.action.start("installing packages");
@@ -66,8 +66,8 @@ export async function createLib(args: ICreateLib) {
     const path = join(rootPath, name);
     process.chdir(path);
     await packageCommand({ mode: "install" });
-  } catch (error) {
-    error(error.message);
+  } catch (err) {
+    error({err});
   }
   cli.action.stop("installed");
 }
