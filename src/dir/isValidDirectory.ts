@@ -1,37 +1,64 @@
 import { join } from "path";
 import { readdirSync } from "fs-extra";
-import { IValidDirectory } from "../types";
+import { IValidDirectory, TLibraries } from "../types";
 
-function isRootDirectory(fileList: string[]): IValidDirectory {
-  const fileNames = {
+function isRootDirectory(
+  fileList: string[],
+  mode: TLibraries
+): IValidDirectory {
+  const sharedFileNames = {
     packageJson: "package.json",
-    packages: "packages",
     docs: "docs",
-    eslint: ".eslintrc.js",
     benchmarks: "benchmarks",
-    tests: "__tests__"
+    tests: "__tests__",
+    eslint: ".eslintrc.js",
+    jest: "jest.config.js",
+    ts: "tsconfig.json",
   };
+  const ncaFileNames = {
+    packages: "packages",
+  };
+  const nodelibFileNames = {
+    src: "src",
+  };
+  // TODO: support RRN
   /**
    * using include to find string in array
    * it's a little more accurate for just checking existence, for finding
    * index will use indexOf (NaN in includes returns true but in indexOf returns -1)
    */
+
   if (
-    fileList.includes(fileNames.packages) &&
-    fileList.includes(fileNames.packageJson) &&
-    fileList.includes(fileNames.docs) &&
-    fileList.includes(fileNames.eslint) &&
-    fileList.includes(fileNames.benchmarks) &&
-    fileList.includes(fileNames.tests)
+    fileList.includes(sharedFileNames.packageJson) &&
+    fileList.includes(sharedFileNames.docs) &&
+    fileList.includes(sharedFileNames.eslint) &&
+    fileList.includes(sharedFileNames.benchmarks) &&
+    fileList.includes(sharedFileNames.tests)
   ) {
-    return {
-      isValid: true,
-      base: "root",
-    };
+    if (mode === "service" && fileList.includes(ncaFileNames.packages)) {
+      return {
+        isValid: true,
+        base: "root",
+        type: "service",
+      };
+    } else if (mode === "nodelib" && fileList.includes(nodelibFileNames.src)) {
+      return {
+        isValid: true,
+        base: "root",
+        type: "nodelib",
+      };
+    } else {
+      return {
+        isValid: false,
+        base: null,
+        type: null,
+      };
+    }
   } else {
     return {
       isValid: false,
       base: null,
+      type: null,
     };
   }
 }
@@ -44,7 +71,7 @@ function isPackagesDirectory(fileList: string[]): IValidDirectory {
     "adapters",
     "interfaces",
     "schemas",
-    "types"
+    "types",
   ];
   const dirLength = directories.length;
   // should exactly match directories
@@ -52,6 +79,7 @@ function isPackagesDirectory(fileList: string[]): IValidDirectory {
     return {
       isValid: false,
       base: null,
+      type: null,
     };
   }
   for (let index = 0; index < dirLength; index++) {
@@ -61,38 +89,41 @@ function isPackagesDirectory(fileList: string[]): IValidDirectory {
       return {
         isValid: false,
         base: null,
+        type: null,
       };
     }
   }
   return {
     isValid: true,
     base: "packages",
+    type: "service",
   };
 }
 
-function traverseUpAndCheck(path: string): IValidDirectory {
+function traverseUpAndCheck(path: string, mode: TLibraries): IValidDirectory {
   /**
-   * will go to up level directory up to three level
-   * cause if two conditions above fail, user should in one of packages
-   * and maybe in one folder doing some operation, the last level is for some
-   * component folder inside (usually should not exists or code is too complicated
-   * and should split)
+   * checks directories upward in four steps
+   * if package is not recognized as node lib or service, (may be rrn) then it fail
+   * even if user maybe in a valid package, but this tree of folder just complicates code
+   * and coder should try to flatten modules as much as possible
    */
   let upDir: string = path;
-  for (let index = 0; index < 3; index++) {
+  for (let index = 0; index < 4; index++) {
     upDir = join(upDir, "..");
     const fileList = readdirSync(upDir);
-    const isPackages = isPackagesDirectory(fileList);
+    const isPackages = isRootDirectory(fileList, mode);
     if (isPackages.isValid) {
       return {
         isValid: true,
         base: "downTheRoad",
+        type: mode,
       };
     }
   }
   return {
     isValid: false,
     base: null,
+    type: null,
   };
 }
 export function isValidDirectory(): IValidDirectory {
@@ -100,23 +131,29 @@ export function isValidDirectory(): IValidDirectory {
   const path = process.cwd();
   const fileList = readdirSync(path);
 
-  // check if it's in root directory
-  const isRoot = isRootDirectory(fileList);
-  if (isRoot.isValid) return isRoot;
+  // check if it's in service root directory
+  const isServiceRoot = isRootDirectory(fileList, "service");
+  if (isServiceRoot.isValid) return isServiceRoot;
+
+  // check if it's in nodelib root directory
+  const isNodeLibRoot = isRootDirectory(fileList, "nodelib");
+  if (isNodeLibRoot.isValid) return isNodeLibRoot;
+  // TODO: check rrn
 
   // check if it's in packages directory
   const isPackages = isPackagesDirectory(fileList);
   if (isPackages.isValid) return isPackages;
-  // check if it's down the road
-  const traverse = traverseUpAndCheck(path);
-  
-  if (traverse.isValid) {
-    return traverse;
-  } else {
-    return {
-      isValid: false,
-      base: null,
-    };
-  }
-}
 
+  // check if it's down the road of service
+  const serviceTraverse = traverseUpAndCheck(path, "service");
+  if (serviceTraverse.isValid) return serviceTraverse;
+
+  const nodelibTraverse = traverseUpAndCheck(path, "nodelib");
+  if (nodelibTraverse.isValid) return nodelibTraverse;
+  
+  return {
+    isValid: false,
+    base: null,
+    type: null,
+  };
+}
