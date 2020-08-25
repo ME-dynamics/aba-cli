@@ -26,6 +26,7 @@
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
+    "@oclif/plugin-autocomplete": "^0.2.0",
     "@oclif/plugin-help": "^3",
     "cli-ux": "^5.4.10",
     "fs-extra": "^9.0.1",
@@ -72,7 +73,8 @@
     "commands": "./lib/commands",
     "bin": "aba",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-autocomplete",
     ]
   },
   "repository": "eyousefifar/aba-cli",
