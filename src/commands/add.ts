@@ -35,8 +35,13 @@ export default class Add extends Command {
       exclusive: exclusiveFlag("global"),
       description: "will save package info in global section",
     }),
+    nodelib: flags.boolean({
+      char: "n",
+      exclusive: exclusiveFlag("dev"),
+      description: "will save package for node library",
+    }),
     dev: flags.boolean({
-      char: "d",
+      char: "D",
       exclusive: exclusiveFlag("dev"),
       description: "will save package info in development section",
     }),
@@ -53,7 +58,7 @@ export default class Add extends Command {
   async run() {
     const { argv, flags } = this.parse(Add);
     // const { packageName } = args;
-    const { entity, controllers, dev, global, usecase } = flags;
+    const { entity, controllers, dev, global, usecase, nodelib } = flags;
     const interfaceLayer = flags.interface;
 
     cli.action.start("adding package ...");
@@ -61,37 +66,59 @@ export default class Add extends Command {
     try {
       if (entity) {
         await typedi(argv);
-        await packageInfo({argv, dev: false, layer: "entities", mode: "add"});
+        await packageInfo({ argv, dev: false, layer: "entities", mode: "add" });
         this.log(
           `${argv.toString()} successfully added with types, saved info into entity section`
         );
       } else if (usecase) {
         await typedi(argv);
-        await packageInfo({argv, dev: false, layer: "usecases", mode: "add"});
+        await packageInfo({ argv, dev: false, layer: "usecases", mode: "add" });
         this.log(
           `${argv.toString()} successfully added with types, saved info into usecase section`
         );
       } else if (controllers) {
-        await packageInfo({argv, dev: false, layer: "controllers", mode: "add"});
+        await packageInfo({
+          argv,
+          dev: false,
+          layer: "controllers",
+          mode: "add",
+        });
         await typedi(argv);
         this.log(
           `${argv.toString()} successfully added with types, saved info into controllers section`
         );
       } else if (interfaceLayer) {
-        await packageInfo({argv, dev: false, layer: "interfaces", mode: "add"});
+        await packageInfo({
+          argv,
+          dev: false,
+          layer: "interfaces",
+          mode: "add",
+        });
         await typedi(argv);
         this.log(
           `${argv.toString()} successfully added with types, saved info into interface section`
         );
       } else if (global) {
         await typedi(argv);
-        await packageInfo({argv, dev: false, layer: "global", mode: "add"});
+        await packageInfo({ argv, dev: false, layer: "global", mode: "add" });
         this.log(
           `${argv.toString()} successfully added with types, saved info into global section`
         );
+      } else if (nodelib) {
+        await typedi(argv, { dev: false });
+        await packageInfo({ argv, dev: false, layer: "none", mode: "add" });
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into nodelib section`
+        );
+      } else if (dev && nodelib) {
+        await typedi(argv, { dev: true });
+        await packageInfo({ argv, dev: true, layer: "dev", mode: "add" });
+        this.log(
+          `${argv.toString()} successfully added with types, saved info into nodelib development section`
+        );
       } else if (dev) {
         await typedi(argv, { dev: true });
-        await packageInfo({argv, dev: false, layer: "dev", mode: "add"});
+        await packageInfo({ argv, dev: false, layer: "dev", mode: "add" });
         this.log(
           `${argv.toString()} successfully added with types, saved info into development section`
         );
