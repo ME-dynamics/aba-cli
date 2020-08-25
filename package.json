@@ -74,7 +74,7 @@
     "bin": "aba",
     "plugins": [
       "@oclif/plugin-help",
-      "@oclif/plugin-autocomplete",
+      "@oclif/plugin-autocomplete"
     ]
   },
   "repository": "eyousefifar/aba-cli",
