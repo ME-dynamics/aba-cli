@@ -1,14 +1,21 @@
-import {join} from "path";
-import { copy, remove } from 'fs-extra';
+import { join } from "path";
+import { copy, remove } from "fs-extra";
+import { TLibraries } from "../types";
 /**
  * cause files from github are in folder named your project master
  * when you download from github, this will move it's files a level up
  * to fix this extra folder
  */
 
-export async function moveTemplateFiles(serviceName: string) {
+export async function moveTemplateFiles(serviceName: string, mode: TLibraries) {
   const rootPath = join(process.cwd(), serviceName);
-  const path = join(rootPath, "nca-template-master");
+  const dir =
+    mode === "service"
+      ? "nca-template-master"
+      : mode === "nodelib"
+      ? "nodelib-template-master"
+      : "rrn-template-master";
+  const path = join(rootPath, dir);
   try {
     await copy(path, rootPath, { recursive: true, dereference: true });
     await remove(path);

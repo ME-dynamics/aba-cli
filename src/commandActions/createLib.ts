@@ -46,7 +46,7 @@ export async function createLib(args: ICreateLib) {
   cli.action.stop("file unzipped!");
   cli.action.start("some cleaning");
   try {
-    await moveTemplateFiles(name);
+    await moveTemplateFiles(name, mode);
   } catch (err) {
     cli.action.stop("something is wrong");
     error({err});
