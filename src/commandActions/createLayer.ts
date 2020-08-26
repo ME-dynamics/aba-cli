@@ -22,18 +22,16 @@ function pathToLayer(
     path = join(process.cwd(), layer);
   } else if (isValidDir.base === "downTheRoad") {
     let upperPath = process.cwd();
-    for (let index = 0; index < 3; index++) {
+    for (let index = 0; index < 4; index++) {
       upperPath = join(upperPath, "..");
       process.chdir(upperPath);
       const checkUpperDir = isValidDirectory();
       if (checkUpperDir.base === "packages") {
         path = join(upperPath, layer);
         break;
-      } else {
-        error({ err: "at most three layers deep in packages!" });
-        return "";
-      }
+      } 
     }
+    error({err: "you should be at most four layers deep in nca projects"})
   }
   return path;
 }
