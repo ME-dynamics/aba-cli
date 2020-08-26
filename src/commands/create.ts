@@ -48,7 +48,8 @@ export default class Create extends Command {
   ];
   logErr = (args: IError) => {
     const { err, errCode } = args;
-    this.error(err, { code: errCode });
+    this.error(err, { code: errCode, exit: 0 });
+    
   };
   logInfo = (args: ILog) => {
     const { message } = args;
