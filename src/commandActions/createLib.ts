@@ -1,73 +1,180 @@
-import { cli } from "cli-ux";
-
-import { ICreateLib } from "../types";
+import { textSync } from "figlet";
+import ora from "ora";
+import { ICreateLib, TLibraries } from "../types";
 import { createDir, moveTemplateFiles } from "../dir";
-import { downloadTemplate, unzip } from "../utils";
-import { updatePackageJson, packageCommand } from "../packageManager";
+import { downloadTemplate, unzip, terminateWithError } from "../utils";
+import { updatePackageJson, yarnClient } from "../packageManager";
 import { join } from "path";
+import { ErrorFactory } from "aba-utils";
 
-export async function createLib(args: ICreateLib) {
-  const { error, log, name, mode } = args;
-  cli.action.start(`creating ${name} ${mode}`);
+async function createLibDirectory(name: string) {
   try {
     await createDir(name);
-  } catch (err) {
-    if (err.code === "EEXIST") {
-      cli.action.stop("something is wrong");
-      error({ err: "service already exist" });
-    }
+  } catch (error) {
+    throw new ErrorFactory({
+      name: "fsError",
+      message: `unable to create ${name} directory`,
+      detail: "",
+      path: `current directory ${process.cwd()}`,
+      nativeError: error,
+      timestamp: undefined,
+    });
   }
-  cli.action.stop("created");
+}
+
+async function downloadingTemplate(
+  mode: TLibraries,
+  libTitle: string
+): Promise<Buffer | undefined> {
+  try {
+    const file = await downloadTemplate(mode);
+    if (file) {
+      return file;
+    } else {
+      throw new ErrorFactory({
+        name: "IOError",
+        message: `unable to download ${libTitle} from github`,
+        detail: "",
+        path: `current directory ${process.cwd()}`,
+        nativeError: undefined,
+        timestamp: undefined,
+      });
+    }
+  } catch (error) {
+    throw new ErrorFactory({
+      name: "IOError",
+      message: `unable to download ${libTitle} from github`,
+      detail: "",
+      path: `current directory ${process.cwd()}`,
+      nativeError: error,
+      timestamp: undefined,
+    });
+  }
+}
+
+async function unzipTemplate(templateFile: Buffer, name: string) {
+  try {
+    await unzip(templateFile, name);
+  } catch (error) {
+    throw new ErrorFactory({
+      name: "fsError",
+      message: `unable to unzip template file`,
+      detail: "",
+      path: `current directory ${process.cwd()}`,
+      nativeError: error,
+      timestamp: undefined,
+    });
+  }
+}
+
+async function moveMasterBranchToRoot(name: string, mode: TLibraries) {
+  try {
+    await moveTemplateFiles(name, mode);
+  } catch (error) {
+    throw new ErrorFactory({
+      name: "fsError",
+      message: `unable to move template files`,
+      detail: "",
+      path: `current directory ${process.cwd()}`,
+      nativeError: error,
+      timestamp: undefined,
+    });
+  }
+}
+
+async function updatePackageInfo(name: string, libTitle: string) {
+  try {
+    await updatePackageJson(name, libTitle);
+  } catch (error) {
+    throw new ErrorFactory({
+      name: "fsError",
+      message: `unable to update package json file`,
+      detail: "",
+      path: `current directory ${process.cwd()}`,
+      nativeError: error,
+      timestamp: undefined,
+    });
+  }
+}
+
+async function installPackages(name: string) {
+  try {
+    const rootPath = process.cwd();
+    const path = join(rootPath, name);
+    process.chdir(path);
+    await yarnClient.install();
+  } catch (error) {
+    throw new ErrorFactory({
+      name: "yarnError",
+      message: `unable to install node modules`,
+      detail: "",
+      path: `current directory ${process.cwd()}`,
+      nativeError: error,
+      timestamp: undefined,
+    });
+  }
+}
+
+export async function createLib(args: ICreateLib) {
+  console.log(textSync("aba-cli", { font: "Crawford" }));
+  const { name, mode } = args;
   const libTitle =
     mode === "service"
       ? "node clean architecture"
       : mode === "nodelib"
       ? "node library"
       : "react & react native";
-  cli.action.start(`downloading ${libTitle} template`);
+  const dirSpinner = ora(`creating ${name} directory`).start();
+  try {
+    await createLibDirectory(name);
+  } catch (error) {
+    dirSpinner.fail("creating directory failed");
+    terminateWithError(error, error.exitCode);
+  }
+  dirSpinner.succeed("directory created");
   let file: Buffer | undefined;
+  const downloadSpinner = ora("downloading template").start();
   try {
-    file = await downloadTemplate(mode);
-  } catch (err) {
-    cli.action.stop("something is wrong");
-    error({err});
-  }
-  cli.action.stop("download completed");
-  cli.action.start("unzipping file");
-
-  if (file) {
-    try {
-      await unzip(file, name);
-    } catch (err) {
-      cli.action.stop("something is wrong");
-      error({err});
+    file = await downloadingTemplate(mode, libTitle);
+    if (!file) {
+      downloadSpinner.fail("failed to download template");
+      terminateWithError("no downloaded file", 0);
     }
+  } catch (error) {
+    downloadSpinner.fail("failed to download template");
+    terminateWithError(error, error.exitCode);
   }
-  cli.action.stop("file unzipped!");
-  cli.action.start("some cleaning");
+  downloadSpinner.succeed("template downloaded");
+  const unzipSpinner = ora("unzipping template file").start();
   try {
-    await moveTemplateFiles(name, mode);
-  } catch (err) {
-    cli.action.stop("something is wrong");
-    error({err});
+    file && (await unzipTemplate(file, name));
+  } catch (error) {
+    unzipSpinner.fail("failed to unzip template file");
+    terminateWithError(error, error.exitCode);
   }
-  cli.action.stop("done");
-  cli.action.start("updating package json");
+  unzipSpinner.succeed("template file extracting complete");
+  const cleanUpSpinner = ora("cleaning up");
   try {
-    await updatePackageJson(name, libTitle);
-  } catch (err) {
-    cli.action.stop("something is wrong");
-    error({err});
+    await moveMasterBranchToRoot(name, mode);
+  } catch (error) {
+    cleanUpSpinner.fail("failed to clean up");
+    terminateWithError(error, error.exitCode);
   }
-  cli.action.stop("package.json updated");
-  cli.action.start("installing packages");
+  cleanUpSpinner.succeed("cleaned up");
+  const updateInfoSpinner = ora("updating package json").info();
   try {
-    const rootPath = process.cwd();
-    const path = join(rootPath, name);
-    process.chdir(path);
-    await packageCommand({ mode: "install" });
-  } catch (err) {
-    error({err});
+    await updatePackageInfo(name, libTitle);
+  } catch (error) {
+    updateInfoSpinner.fail("failed to update package info");
+    terminateWithError(error, error.exitCode);
   }
-  cli.action.stop("installed");
+  updateInfoSpinner.succeed("package json updated");
+  const installSpinner = ora("install node modules").start();
+  try {
+    await installPackages(name);
+  } catch (error) {
+    installSpinner.fail("failed to install packages");
+    terminateWithError(error, error.exitCode);
+  }
+  installSpinner.succeed("node modules installed");
 }
