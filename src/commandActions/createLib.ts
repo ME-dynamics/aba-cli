@@ -2,7 +2,7 @@ import { textSync } from "figlet";
 import ora from "ora";
 import { ICreateLib, TLibraries } from "../types";
 import { createDir, moveTemplateFiles } from "../dir";
-import { downloadTemplate, unzip, terminateWithError } from "../utils";
+import { downloadTemplate, unzip, terminateWithError, figlet } from "../utils";
 import { updatePackageJson, yarnClient } from "../packageManager";
 import { join } from "path";
 import { ErrorFactory } from "aba-utils";
@@ -116,7 +116,7 @@ async function installPackages(name: string) {
 }
 
 export async function createLib(args: ICreateLib) {
-  console.log(textSync("aba-cli", { font: "Crawford" }));
+  figlet();
   const { name, mode } = args;
   const libTitle =
     mode === "service"
