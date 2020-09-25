@@ -1,22 +1,14 @@
-import { spawn } from "child_process";
+import execa from "execa";
+import { terminateWithError } from '../utils';
 
 export async function installYarn() {
-  const install = spawn("npm", ["install", "-g", "yarn"]);
-  install.on("error", () => {
-    throw new Error("npm is not installed!");
-  });
-  install.on("exit", () => {
-    // console.log(errors);
-    console.log(installed);
-    // TODO: write these to file or db
-  });
-  let errors: string[] = [];
-  for await (const output of install.stderr) {
-    errors.push(output.toString());
-  }
-  let installed: string[] = [];
-  for await (const output of install.stdout) {
-    installed.push(output.toString());
+  try {
+    const { stdout } = await execa("npm", ["install", "-g", "yarn"]);
+    // TODO: layout out puts using blessed
+    console.log(stdout);
+  } catch (error) {
+    terminateWithError(error, error.exitCode);
   }
 }
+
 
