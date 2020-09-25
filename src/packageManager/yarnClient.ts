@@ -1,12 +1,12 @@
 import typedi from "typed-install";
 import execa from "execa";
+import { terminateWithError } from '../utils';
 
 async function install() {
   try {
-    const { stdout } = await execa("yarn", ["install"]);
+    await execa("yarn", ["install"]);
   } catch (error) {
-    console.error(error);
-    process.exit(error.exitCode);
+    terminateWithError(error, error.exitCode)
   }
 }
 
@@ -21,11 +21,10 @@ async function add(packageName: string[]) {
 
 async function remove(packageName: string[]) {
   try {
-    const { stdout } = await execa("yarn", ["remove", ...packageName]);
-    console.log(stdout);
+    await execa("yarn", ["remove", ...packageName]);
+    
   } catch (error) {
-    console.error(error);
-    process.exit(error.exitCode);
+    terminateWithError(error, error.exitCode)
   }
 }
 
@@ -33,8 +32,7 @@ async function addDev(packageName: string[]) {
   try {
     await typedi(packageName, { packageManager: "yarn", dev: true });
   } catch (error) {
-    console.error(error);
-    process.exit(error.exitCode);
+    terminateWithError(error, error.exitCode)
   }
 }
 export const yarnClient = {
