@@ -1,19 +1,32 @@
 import { Command, flags } from "@oclif/command";
-import { cli } from "cli-ux";
-import typedi from "typed-install";
+import ora from "ora";
 
-import { exclusiveFlag } from "../utils";
-import { packageInfo } from "../packageManager";
+import { exclusiveFlag, terminateWithError } from "../utils";
+import { packageInfo, yarnClient } from "../packageManager";
 
 export default class Add extends Command {
-  //   static description = "add and managing packages";
-
+  static description = "adds packages to your project";
+  static examples = [
+    `$ aba add -e entityPackage`,
+    `$ aba add -a adapterPackage`,
+    `$ aba add -u usecasePackage`,
+    `$ aba add -c controllerPackage`,
+    `$ aba add -i interfacePackage`,
+    `$ aba add -g globalPackage`,
+    `$ aba add -n nodelibPackage`,
+    `$ aba add -D devPackage`,
+  ];
   static flags = {
     // help: flags.help({ char: "h" }),
     entity: flags.boolean({
       char: "e",
       exclusive: exclusiveFlag("entities"),
       description: "will save package info in entities section",
+    }),
+    adapter: flags.boolean({
+      char: "a",
+      exclusive: exclusiveFlag("adapters"),
+      description: "will save package info in adapter section",
     }),
     usecase: flags.boolean({
       char: "u",
@@ -33,7 +46,8 @@ export default class Add extends Command {
     global: flags.boolean({
       char: "g",
       exclusive: exclusiveFlag("global"),
-      description: "will save package info in global section",
+      description:
+        "will save package info in global (global to current package) section",
     }),
     nodelib: flags.boolean({
       char: "n",
@@ -58,79 +72,73 @@ export default class Add extends Command {
   async run() {
     const { argv, flags } = this.parse(Add);
     // const { packageName } = args;
-    const { entity, controllers, dev, global, usecase, nodelib } = flags;
+    const {
+      entity,
+      controllers,
+      dev,
+      global,
+      usecase,
+      nodelib,
+      adapter,
+    } = flags;
     const interfaceLayer = flags.interface;
 
-    cli.action.start("adding package ...");
-
+    const spinner = ora("adding packages").start();
     try {
       if (entity) {
-        await typedi(argv);
+        await yarnClient.add(argv);
         await packageInfo({ argv, dev: false, layer: "entities", mode: "add" });
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into entity section`
-        );
+        spinner.succeed("package(s) installed");
       } else if (usecase) {
-        await typedi(argv);
+        await yarnClient.add(argv);
         await packageInfo({ argv, dev: false, layer: "usecases", mode: "add" });
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into usecase section`
-        );
+        spinner.succeed("package(s) installed");
       } else if (controllers) {
+        await yarnClient.add(argv);
         await packageInfo({
           argv,
           dev: false,
           layer: "controllers",
           mode: "add",
         });
-        await typedi(argv);
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into controllers section`
-        );
+        spinner.succeed("package(s) installed");
       } else if (interfaceLayer) {
+        await yarnClient.add(argv);
         await packageInfo({
           argv,
           dev: false,
           layer: "interfaces",
           mode: "add",
         });
-        await typedi(argv);
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into interface section`
-        );
+        spinner.succeed("package(s) installed");
+      } else if (adapter) {
+        await yarnClient.add(argv);
+        await packageInfo({ argv, dev: false, layer: "adapters", mode: "add" });
+        spinner.succeed("package(s) installed");
       } else if (global) {
-        await typedi(argv);
+        await yarnClient.add(argv);
         await packageInfo({ argv, dev: false, layer: "global", mode: "add" });
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into global section`
-        );
+        spinner.succeed("package(s) installed");
       } else if (nodelib) {
-        await typedi(argv, { dev: false });
+        await yarnClient.add(argv);
         await packageInfo({ argv, dev: false, layer: "none", mode: "add" });
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into nodelib section`
-        );
+        spinner.succeed("package(s) installed");
       } else if (dev && nodelib) {
-        await typedi(argv, { dev: true });
+        await yarnClient.addDev(argv);
         await packageInfo({ argv, dev: true, layer: "dev", mode: "add" });
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into nodelib development section`
-        );
+        spinner.succeed("package(s) installed");
       } else if (dev) {
-        await typedi(argv, { dev: true });
+        await yarnClient.addDev(argv);
         await packageInfo({ argv, dev: false, layer: "dev", mode: "add" });
-        this.log(
-          `${argv.toString()} successfully added with types, saved info into development section`
-        );
+        spinner.succeed("package(s) installed");
       } else {
-        this.error(
+        spinner.fail(
           "you should define the scope you want the package to be installed"
         );
       }
-      cli.action.stop();
-    } catch (err) {
-      cli.action.stop(`couldn\'t install package ${argv.toString()}`);
-      this.error(err);
+    } catch (error) {
+      spinner.fail("`couldn't install package(s)");
+      terminateWithError(error, error.exitCode);
     }
   }
 }
