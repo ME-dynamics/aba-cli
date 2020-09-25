@@ -1,4 +1,4 @@
-import { Command, flags } from "@oclif/command";
+import { Command } from "@oclif/command";
 import { createLib, createLayer } from "../commandActions";
 import { IError, ILog } from "../types";
 import { cli } from "cli-ux";
@@ -15,19 +15,11 @@ export default class Create extends Command {
     `$ aba create schema schemaName`,
   ];
 
-  // static flags = {
-  //   help: flags.help({ char: "h" }),
-  //   // flag with a value (-n, --name=VALUE)
-  //   name: flags.string({ char: "n", description: "name to print" }),
-  //   // flag with no value (-f, --force)
-  //   force: flags.boolean({ char: "f" }),
-  // };
-
   static args = [
     {
       name: "mode",
       required: true,
-      description: "choose what to create",
+      description: "create NCA, RRN, node library or create NCA layers",
       hidden: false,
       options: [
         "service",
@@ -46,17 +38,8 @@ export default class Create extends Command {
       hidden: false,
     },
   ];
-  logErr = (args: IError) => {
-    const { err, errCode } = args;
-    this.error(err, { code: errCode, exit: 0 });
-    
-  };
-  logInfo = (args: ILog) => {
-    const { message } = args;
-    this.log(message);
-  };
   async run() {
-    const { args, flags } = this.parse(Create);
+    const { args } = this.parse(Create);
     const { mode, name } = args;
     if (mode === "service") {
       const serviceMode = "service";
@@ -64,8 +47,6 @@ export default class Create extends Command {
       await createLib({
         name: serviceName,
         mode: serviceMode,
-        error: this.logErr,
-        log: this.logInfo,
       });
     } else if (mode === "nodelib") {
       const serviceMode = "nodelib";
@@ -73,8 +54,6 @@ export default class Create extends Command {
       await createLib({
         name: serviceName,
         mode: serviceMode,
-        error: this.logErr,
-        log: this.logInfo,
       });
     } else if (mode === "rrn") {
       const serviceMode = "rrn";
@@ -82,13 +61,9 @@ export default class Create extends Command {
       await createLib({
         name: serviceName,
         mode: serviceMode,
-        error: this.logErr,
-        log: this.logInfo,
       });
     } else if (mode === "entity") {
       createLayer({
-        error: this.logErr,
-        log: this.logInfo,
         mode: "entity",
         name,
       });
@@ -96,8 +71,6 @@ export default class Create extends Command {
       this.log("will automatically create controller and interface for you");
       const httpVerb = await cli.prompt('what http method will this usecase respond to?', {required: true, });
       createLayer({
-        error: this.logErr,
-        log: this.logInfo,
         mode: "usecase",
         name,
         httpVerb
