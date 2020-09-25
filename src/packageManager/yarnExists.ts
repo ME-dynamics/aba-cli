@@ -1,32 +1,24 @@
-import { spawn } from "child_process";
+import execa from "execa";
 import { gt } from "semver";
-export async function yarnExists(): Promise<boolean> {
+import { terminateWithError } from "../utils";
+export async function yarnExists(): Promise<boolean | undefined> {
   try {
-    const yarnExists = spawn("yarn", ["--version"]);
-    yarnExists.on("error", () => {
-      return false;
-    });
-    let yarnVersion: string | undefined = undefined;
-    for await (const data of yarnExists.stdout) {
-      const strData = data.toString();
-      if (strData) {
-        yarnVersion = strData;
-        break;
-      }
-    }
-    if (yarnVersion) {
+    const { stdout } = await execa("yarn", ["--version"]);
+    if (stdout) {
       const validVersion = "1.22.0";
-      if (gt(yarnVersion, validVersion)) {
+      if (gt(`${stdout}`, validVersion)) {
         return true;
       } else {
-        throw Error(
-          `you should update yarn to latest version`
+        terminateWithError(
+          `you should upgrade Yarn to version greater than 1.22.0
+       current version : ${stdout}`,
+          0
         );
       }
     } else {
       return false;
     }
   } catch (error) {
-    throw error;
+    terminateWithError(error, error.exitCode);
   }
 }
