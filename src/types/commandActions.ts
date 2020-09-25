@@ -14,16 +14,13 @@ export type TLibraries = "service" | "nodelib" | "rrn";
 export interface ICreateLib {
   name: string;
   mode: TLibraries;
-  error: TError;
-  log: TLog;
 }
 export type TCreateLayers = "entity" | "usecase" | "adapter" | "schema";
 export interface ICreateLayer {
     mode: TCreateLayers;
     name: string;
     httpVerb?: THttpVerbs
-    error: TError;
-    log: TLog;
+    
 }
 
 export type THttpVerbs =
