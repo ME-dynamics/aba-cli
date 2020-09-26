@@ -1,4 +1,3 @@
-import { textSync } from "figlet";
 import ora from "ora";
 import { ICreateLib, TLibraries } from "../types";
 import { createDir, moveTemplateFiles } from "../dir";
