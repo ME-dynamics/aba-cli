@@ -1,7 +1,6 @@
 import { Command } from "@oclif/command";
 import { createLib, createLayer } from "../commandActions";
-import { IError, ILog } from "../types";
-import { cli } from "cli-ux";
+
 export default class Create extends Command {
   static description =
     "creates node js clean architecture, nca layers, node libraries and react + react native project";
@@ -63,20 +62,19 @@ export default class Create extends Command {
         mode: serviceMode,
       });
     } else if (mode === "entity") {
-      createLayer({
-        mode: "entity",
+      await createLayer({
+        mode: "entities",
         name,
       });
     } else if (mode === "usecase") {
-      this.log("will automatically create controller and interface for you");
-      const httpVerb = await cli.prompt('what http method will this usecase respond to?', {required: true, });
-      createLayer({
-        mode: "usecase",
+      await createLayer({
+        mode: "usecases",
         name,
-        httpVerb
       });
     } else if (mode === "adapter") {
+      this.warn("not implemented yet")
     } else if (mode === "schema") {
+      this.warn("not implemented yet")
     }
   }
 }
