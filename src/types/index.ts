@@ -8,10 +8,6 @@ export {
 export { IDbClient, IAdd, IPackage, IRemove } from "./db";
 export {
   ICreateLib,
-  IError,
-  ILog,
-  TError,
-  TLog,
   TLibraries,
   THttpVerbs,
   ICreateLayer,
