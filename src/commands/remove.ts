@@ -1,10 +1,12 @@
 import { Command } from "@oclif/command";
-import { cli } from "cli-ux";
-import { execSync } from "child_process";
+import ora from "ora";
 import { packageInfo } from "../packageManager";
 import { isValidDirectory } from "../dir";
+import { yarnClient } from "../packageManager";
+import { terminateWithError } from "../utils";
 export default class Remove extends Command {
   static description = "remove package from your nca project";
+  static examples = [`$ aba remove packageName`];
   static strict = false;
   static args = [
     {
@@ -16,21 +18,21 @@ export default class Remove extends Command {
   ];
 
   async run() {
+    // TODO: move to command actions 
     const { argv } = this.parse(Remove);
-    const packages = argv.join(" ");
-    const command = `yarn remove ${packages}`;
-    const isValidDir = isValidDirectory();
-    if (!isValidDir.isValid)
-      this.error("not a valid nca, nodelib, rrn project");
-    // TODO: remove types as well
-    cli.action.start(`removing packages: ${packages}`);
+    const dirInfo = isValidDirectory();
+    const spinner = ora("removing package").start();
+    if (!dirInfo.validDir) {
+      spinner.fail("not a valid nca, nodelib, rrn project");
+      process.exit();
+    }
     try {
       await packageInfo({ argv, dev: false, layer: "global", mode: "remove" });
-      const executed = execSync(command);
+      await yarnClient.remove(argv);
+      spinner.succeed("removed");
     } catch (error) {
-      cli.action.stop("remove failed");
-      this.error(error);
+      spinner.fail("failed to remove packages");
+      terminateWithError(error, error.exitCode);
     }
-    cli.action.stop("done");
   }
 }
