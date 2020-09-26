@@ -20,7 +20,7 @@ $ npm install -g aba-cli
 $ aba COMMAND
 running command...
 $ aba (-v|--version|version)
-aba-cli/0.1.6 linux-x64 node-v12.18.3
+aba-cli/0.2.0 linux-x64 node-v12.18.4
 $ aba --help [COMMAND]
 USAGE
   $ aba COMMAND
@@ -38,6 +38,8 @@ USAGE
 
 ## `aba add PACKAGENAME`
 
+adds packages to your project
+
 ```
 USAGE
   $ aba add PACKAGENAME
@@ -47,15 +49,26 @@ ARGUMENTS
 
 OPTIONS
   -D, --dev          will save package info in development section
+  -a, --adapter      will save package info in adapter section
   -c, --controllers  will save package info in controllers section
   -e, --entity       will save package info in entities section
-  -g, --global       will save package info in global section
+  -g, --global       will save package info in global (global to current package) section
   -i, --interface    will save package info in interface section
   -n, --nodelib      will save package for node library
   -u, --usecase      will save package info in usecase section
+
+EXAMPLES
+  $ aba add -e entityPackage
+  $ aba add -a adapterPackage
+  $ aba add -u usecasePackage
+  $ aba add -c controllerPackage
+  $ aba add -i interfacePackage
+  $ aba add -g globalPackage
+  $ aba add -n nodelibPackage
+  $ aba add -D devPackage
 ```
 
-_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.6/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/add.ts)_
 
 ## `aba audit`
 
@@ -74,7 +87,7 @@ OPTIONS
   -v, --verbose        Shows dependencies vulnerabilities in JSON format as well as response data
 ```
 
-_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.6/src/commands/audit.ts)_
+_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/audit.ts)_
 
 ## `aba autocomplete [SHELL]`
 
@@ -108,7 +121,7 @@ USAGE
   $ aba create MODE NAME
 
 ARGUMENTS
-  MODE  (service|nodelib|rrn|entity|usecase|adapter|schema) choose what to create
+  MODE  (service|nodelib|rrn|entity|usecase|adapter|schema) create NCA, RRN, node library or create NCA layers
   NAME  the package / layer name you want to create
 
 EXAMPLES
@@ -121,7 +134,7 @@ EXAMPLES
   $ aba create schema schemaName
 ```
 
-_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.6/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/create.ts)_
 
 ## `aba help [COMMAND]`
 
@@ -150,7 +163,10 @@ USAGE
 
 ARGUMENTS
   PACKAGENAME  name of npm module you want to remove from your nca / nodelib / rrn project
+
+EXAMPLE
+  $ aba remove packageName
 ```
 
-_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.1.6/src/commands/remove.ts)_
+_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/remove.ts)_
 <!-- commandsstop -->
