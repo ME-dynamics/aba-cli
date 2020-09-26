@@ -1,6 +1,5 @@
 import { isValidDirectory } from '../dir';
 import { join } from 'path';
-import { TLibraries } from '../types';
 
 
 
@@ -8,7 +7,7 @@ import { TLibraries } from '../types';
 export function switchToRoot(): void {
     const validDir = isValidDirectory();
     // check if project is valid
-    if (!validDir.isValid) throw new Error(`not a nca / nodelib/ rrn project`);
+    if (!validDir.validDir) throw new Error(`not a nca / nodelib/ rrn project`);
   
     // if base is in root, no need to change directory
     if (validDir.base === "root") return;
