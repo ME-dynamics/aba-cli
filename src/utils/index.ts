@@ -4,3 +4,5 @@ export { exclusiveFlag } from "./exclusiveFlag";
 export { switchToRoot } from "./switchToRoot";
 export { readPackageJson } from "./readPackageJson";
 export { terminateWithError } from "./terminateWithError";
+export { figlet } from "./figlet";
+export { firstLetterUpperCase } from "./firstLetterToUpperCase"
