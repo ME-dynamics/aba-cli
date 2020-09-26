@@ -1,13 +1,28 @@
-import { cli } from "cli-ux";
+import { prompt } from "inquirer";
 import { readJSONSync, writeJSONSync } from "fs-extra";
 import { join } from "path";
 
 export async function updatePackageJson(name: string, libTitle: string) {
   const rootPath = process.cwd();
   const path = join(rootPath, name);
-  const repo = await cli.prompt("project git repository");
-  // TODO: put some validation for url;
-  const author = await cli.prompt("project's author name", { required: true });
+  const answers = await prompt([
+    {
+      name: "repo",
+      message: "please enter this project git repository url in http form",
+
+    },
+    {
+      name: "protocol",
+      message: "do you use SSH or HTTP?",
+      type: "list",
+      choices: ["SSH", "HTTP"],
+    },
+    {
+      name: "author",
+      message: "who is the author of this project?",
+      
+    }
+  ]);
   const packageJsonPath = join(path, "package.json");
   let pJson: any;
   try {
@@ -15,12 +30,8 @@ export async function updatePackageJson(name: string, libTitle: string) {
   } catch (error) {
     throw new Error(`error in reading json, info: ${error}`);
   }
-
-  if (repo) {
-    pJson.repository = repo;
-  } else {
-    pJson.repository = "FILL ME";
-  }
+  const { repo, protocol, author } = answers;
+  pJson.repository = repo;
   pJson.name = name;
   pJson.description = `${libTitle}: ${name}`;
   pJson.author = author;
@@ -30,3 +41,4 @@ export async function updatePackageJson(name: string, libTitle: string) {
     throw new Error(`error in writing json, info: ${error}`);
   }
 }
+
