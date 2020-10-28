@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command';
-const {child, exec} = require('child_process');
+const { exec} = require('child_process');
 
 export default class Audit extends Command {
   static flags = {

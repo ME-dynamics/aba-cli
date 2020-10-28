@@ -1,16 +1,16 @@
 import { createHash } from "crypto";
-import { IDbClient, IAdd, IPackage } from "../types";
+import { i_db_client, i_add, i_package } from "../types";
 
-export function buildAdd(args: IDbClient) {
+export function build_add(args: i_db_client) {
   const { db } = args;
-  return function add(info: IAdd): Promise<IPackage> {
+  return function add(info: i_add): Promise<i_package> {
     return new Promise((resolve, reject) => {
-      const { dev, layer, packageName, version } = info;
+      const { dev, layer, package_name, version } = info;
       const sha1 = createHash("sha1");
-      const id = sha1.update(packageName).digest("hex");
+      const id = sha1.update(package_name).digest("hex");
       const doc = {
         _id: id,
-        packageName,
+        package_name,
         version,
         dev,
         layer,
@@ -21,7 +21,7 @@ export function buildAdd(args: IDbClient) {
         } else {
           resolve({
             id: newDoc._id,
-            packageName: newDoc.packageName,
+            package_name: newDoc.package_name,
             version: newDoc.version,
             dev: newDoc.dev,
             layer: newDoc.layer,

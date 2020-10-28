@@ -1,24 +1,19 @@
-import { THttpVerbs } from '../types';
-import { firstLetterUpperCase } from '../utils';
+import { t_http_verbs } from "../types";
 
-
-
-
-export function controllerLayer(usecase: string, httpVerb: THttpVerbs) {
-    const upperUsecase = firstLetterUpperCase(usecase);
-    const controllerName = `${httpVerb.toUpperCase()}${upperUsecase}`;
-    const controllerFile = `import { IRequest } from "../types"
-      import { ${usecase.toLowerCase()} } from "../usecases"
-      export function build${controllerName}(){
+export function controller_layer(usecase: string, http_verb: t_http_verbs) {
+  const controller_name = `${http_verb.toLowerCase()}_${usecase.toLowerCase()}`;
+  const controller_file = `import { i_request } from "../types";
+      import { ${usecase.toLowerCase()} } from "../usecases";
+      export function build_${controller_name}(){
           // TODO: inject any tool that's needed, like request cache
-          return async function ${controllerName}(httpRequest: IRequest) {
-              // TODO: extract data const { body, ...} = httpRequest;
+          return async function ${controller_name}(http_request: i_request) {
+              // TODO: extract data const { body, ...} = http_request;
               // TODO: do controller logic, like jwt, cache, some rules, validate maybe
               // TODO: call use case with parameters and return results
-          }
+          };
       }`;
-    return {
-      controllerName,
-      controllerFile,
-    };
-  }
+  return {
+    controller_name,
+    controller_file,
+  };
+}

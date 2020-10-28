@@ -1,10 +1,11 @@
 import { prompt } from "inquirer";
 import { readJSONSync, writeJSONSync } from "fs-extra";
 import { join } from "path";
+import { terminate_with_error } from '../utils';
 
-export async function updatePackageJson(name: string, libTitle: string) {
-  const rootPath = process.cwd();
-  const path = join(rootPath, name);
+export async function update_package_json(name: string, lib_title: string) {
+  const root_path = process.cwd();
+  const path = join(root_path, name);
   const answers = await prompt([
     {
       name: "repo",
@@ -23,22 +24,22 @@ export async function updatePackageJson(name: string, libTitle: string) {
       
     }
   ]);
-  const packageJsonPath = join(path, "package.json");
-  let pJson: any;
+  const package_json_path = join(path, "package.json");
+  let p_json: any;
   try {
-    pJson = readJSONSync(packageJsonPath);
+    p_json = readJSONSync(package_json_path);
   } catch (error) {
     throw new Error(`error in reading json, info: ${error}`);
   }
   const { repo, protocol, author } = answers;
-  pJson.repository = repo;
-  pJson.name = name;
-  pJson.description = `${libTitle}: ${name}`;
-  pJson.author = author;
+  p_json.repository = repo;
+  p_json.name = name;
+  p_json.description = `${lib_title}: ${name}`;
+  p_json.author = author;
   try {
-    writeJSONSync(packageJsonPath, pJson, { spaces: 2 });
+    writeJSONSync(package_json_path, p_json, { spaces: 2 });
   } catch (error) {
-    throw new Error(`error in writing json, info: ${error}`);
+    terminate_with_error(`error in writing json, info: ${error}`, error.exitCode);
   }
 }
 

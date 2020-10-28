@@ -6,16 +6,16 @@ import { ErrorFactory } from "aba-utils";
  * creates service directory
  */
 
-export async function createDir(serviceName: string) {
-  const currentDir = process.cwd();
+export async function create_dir(service_name: string) {
+  const current_dir = process.cwd();
   try {
-    const dir = join(currentDir, serviceName);
+    const dir = join(current_dir, service_name);
     mkdirSync(dir);
   } catch (error) {
     throw new ErrorFactory({
       name: "fsError",
       message: "unable to create directory",
-      detail: `unable to create ${serviceName} directory in ${currentDir}`,
+      detail: `unable to create ${current_dir} directory in ${service_name}`,
       nativeError: error,
       path: undefined,
       timestamp: undefined

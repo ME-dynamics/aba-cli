@@ -1,31 +1,31 @@
 import fetch from "node-fetch";
-import { TLibraries } from "../types";
+import { t_libraries } from "../types";
 /**
  * download template for nca project  from github for now
  */
 
-export async function downloadTemplate(
-  mode: TLibraries
+export async function download_template(
+  mode: t_libraries
 ): Promise<Buffer | undefined> {
   let file: Buffer | undefined;
-  const nodelibUrl =
+  const nodelib_url =
     "https://github.com/eyousefifar/nodelib-template/archive/master.zip";
-  const ncaUrl =
+  const nca_url =
     "https://github.com/eyousefifar/nca-template/archive/master.zip";
-  const rrnUrl =
+  const rrn_url =
     "https://github.com/eyousefifar/rrn-template/archive/master.zip";
 
   try {
     let url;
     switch (mode) {
       case "service":
-        url = ncaUrl;
+        url = nca_url;
         break;
       case "nodelib":
-        url = nodelibUrl;
+        url = nodelib_url;
         break;
       case "rrn":
-        url = rrnUrl;
+        url = rrn_url;
         break;
       default:
         throw new Error(`mode: ${mode} is not valid`);

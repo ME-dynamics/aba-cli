@@ -1,13 +1,13 @@
 import execa from "execa";
-import { terminateWithError } from '../utils';
+import { terminate_with_error } from '../utils';
 
-export async function installYarn() {
+export async function install_yarn() {
   try {
     const { stdout } = await execa("npm", ["install", "-g", "yarn"]);
     // TODO: layout out puts using blessed
     console.log(stdout);
   } catch (error) {
-    terminateWithError(error, error.exitCode);
+    terminate_with_error(error, error.exitCode);
   }
 }
 

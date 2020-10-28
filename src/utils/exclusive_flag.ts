@@ -1,4 +1,4 @@
-import { TLayers } from "../types";
+import { t_layers } from "../types";
 
 /**
  * a helper tool, for filtering flags in add command,
@@ -7,8 +7,8 @@ import { TLayers } from "../types";
  * if you want to which is really not recommended you should do it globally
  */
 
-export function exclusiveFlag(flag: TLayers) {
-  const flags: TLayers[] = [
+export function exclusive_flag(flag: t_layers) {
+  const flags: t_layers[] = [
     "entities",
     "usecases",
     "controllers",

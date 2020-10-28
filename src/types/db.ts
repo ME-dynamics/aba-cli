@@ -1,8 +1,8 @@
 import nedb from 'nedb';
-import { TLayers } from './packageManager';
+import { t_layers } from './package_manager';
 
 
-export interface IDbClient {
+export interface i_db_client {
     db: nedb
 }
 
@@ -10,18 +10,18 @@ export interface IDbClient {
 // export type TRun =  (sql: string, params?: any[] | Record<string, unknown> ) => Promise<TRan>;
 
 
-export interface IAdd {
-    packageName: string;
+export interface i_add {
+    package_name: string;
     version?: string;
     dev: boolean;
-    layer: TLayers;
+    layer: t_layers;
 }
 
-export interface IPackage extends IAdd {
+export interface i_package extends i_add {
     id: string;
 }
 
 
-export interface IRemove {
-    packageName: string;
+export interface i_remove {
+    package_name: string;
 }

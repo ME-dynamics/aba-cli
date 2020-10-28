@@ -1,24 +1,23 @@
-import { firstLetterUpperCase } from "../utils";
 
-export function entityLayer(name: string) {
-  const upperName = firstLetterUpperCase(name);
+export function entity_layer(name: string) {
+  const lower_name = name.toLowerCase();
   return `// import {} from "../types";
-  export function buildMake${upperName}(args: any) {
+  export function build_make_${lower_name}(args: any) {
           // FIXME: write your interface for args
-          return function make${upperName}(${name}: any) {
-              // FIXME: write your interface for ${name}
+          return function make_${lower_name}(${lower_name}: any) {
+              // FIXME: write your interface for ${lower_name}
               // TODO: extract Data: const / let {item1, item2, ...} = ${name};
   
               // TODO: write business rules
   
-              const made${upperName}: any = {
+              const made_${lower_name}: any = {
                   get: {},
                   set: {},
                   action: {}
               };
-              // FIXME: interface for made${upperName}
+              // FIXME: interface for made_${lower_name}
   
-              return Object.freeze(made${upperName});
+              return Object.freeze(made_${lower_name});
           };
-      } `;
+      };`;
 }

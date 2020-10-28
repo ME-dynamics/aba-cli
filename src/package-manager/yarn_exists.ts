@@ -1,7 +1,7 @@
 import execa from "execa";
 import { gt } from "semver";
-import { terminateWithError } from "../utils";
-export async function yarnExists(): Promise<boolean | undefined> {
+import { terminate_with_error } from "../utils";
+export async function yarn_exists(): Promise<boolean | undefined> {
   try {
     const { stdout } = await execa("yarn", ["--version"]);
     if (stdout) {
@@ -9,7 +9,7 @@ export async function yarnExists(): Promise<boolean | undefined> {
       if (gt(`${stdout}`, validVersion)) {
         return true;
       } else {
-        terminateWithError(
+        terminate_with_error(
           `you should upgrade Yarn to version greater than 1.22.0
        current version : ${stdout}`,
           0
@@ -19,6 +19,6 @@ export async function yarnExists(): Promise<boolean | undefined> {
       return false;
     }
   } catch (error) {
-    terminateWithError(error, error.exitCode);
+    terminate_with_error(error, error.exitCode);
   }
 }

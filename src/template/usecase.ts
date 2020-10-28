@@ -1,17 +1,15 @@
-import { firstLetterUpperCase } from "../utils";
 
-export function usecaseLayer(name: string) {
-  const upperName = firstLetterUpperCase(name);
+export function usecase_layer(name: string) {
 
-  const usecaseFile = `// import { } from "../entities";
-      // import { httpResult ,result, ErrorFactory, IResult} from "aba-utils";
+  const usecase_file = `// import { } from "../entities";
+      // import { http_result ,result, error_factory, i_result} from "aba-utils";
       // import { } from "../types";
   
-      export function build${upperName} (args: any) {
+      export function build_${name.toLowerCase()} (args: any) {
           // FIXME: write your interface for args
-          return async function ${name} (info: any) {
+          return async function ${name.toLowerCase()} (info: any) {
               // FIXME: change value to needed arguments with interface
-              // FIXME: create function return interface in Promise -> IResult or IHttpResult -> your interface
+              // FIXME: create function return interface in Promise -> i_result or i_http_result -> your interface
   
               // TODO: write the use case
               // TODO: use result function to return anything
@@ -19,6 +17,6 @@ export function usecaseLayer(name: string) {
               // INFO: use http status codes lib
           };
       }`;
-  return usecaseFile;
+  return usecase_file;
   
 }

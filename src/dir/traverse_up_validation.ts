@@ -1,36 +1,36 @@
 import {  readdirSync } from "fs-extra";
 import { join } from "path"
-import { isRootDir } from "./isRootDir";
+import { is_root_dir } from "./is_root_dir";
 
-import { TLibraries, IValidDirectory } from "../types"
-
-
+import { t_libraries, i_valid_directory } from "../types"
 
 
 
 
-export function traverseUpValidation(path: string, mode: TLibraries): IValidDirectory {
+
+
+export function traverse_up_validation(path: string, mode: t_libraries): i_valid_directory {
     /**
      * checks directories upward in four steps
      * if package is not recognized as node lib or service, (may be rrn) then it fail
      * even if user maybe in a valid package, but this tree of folder just complicates code
      * and coder should try to flatten modules as much as possible
      */
-    let upDir: string = path;
+    let up_dir: string = path;
     for (let index = 0; index < 4; index++) {
-      upDir = join(upDir, "..");
-      const fileList = readdirSync(upDir);
-      const isRoot = isRootDir(fileList, mode);
-      if (isRoot.validDir) {
+      up_dir = join(up_dir, "..");
+      const file_list = readdirSync(up_dir);
+      const is_root = is_root_dir(file_list, mode);
+      if (is_root.valid_dir) {
         return {
-          validDir: true,
-          base: "downTheRoad",
+          valid_dir: true,
+          base: "down_the_road",
           type: mode,
         };
       }
     }
     return {
-      validDir: false,
+      valid_dir: false,
       base: undefined,
       type: undefined,
     };

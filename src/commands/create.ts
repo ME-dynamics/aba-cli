@@ -1,17 +1,17 @@
 import { Command } from "@oclif/command";
-import { createLib, createLayer } from "../commandActions";
+import { create_layer, create_lib} from "../command-actions";
 
 export default class Create extends Command {
   static description =
     "creates node js clean architecture, nca layers, node libraries and react + react native project";
   static examples = [
-    `$ aba create service serviceName`,
-    `$ aba create nodelib libName`,
-    `$ aba create rrn rrnName`,
-    `$ aba create entity entityName`,
-    `$ aba create usecase usecaseName`,
-    `$ aba create adapter adapterName`,
-    `$ aba create schema schemaName`,
+    `$ aba create service service_name`,
+    `$ aba create nodelib lib_name`,
+    `$ aba create rrn rrn_name`,
+    `$ aba create entity entity_name`,
+    `$ aba create usecase usecase_name`,
+    `$ aba create adapter adapter_name`,
+    `$ aba create schema schema_name`,
   ];
 
   static args = [
@@ -41,33 +41,33 @@ export default class Create extends Command {
     const { args } = this.parse(Create);
     const { mode, name } = args;
     if (mode === "service") {
-      const serviceMode = "service";
-      const serviceName = `${name}`;
-      await createLib({
-        name: serviceName,
-        mode: serviceMode,
+      const service_mode = "service";
+      const service_name = `${name}`;
+      await create_lib({
+        name: service_name,
+        mode: service_mode,
       });
     } else if (mode === "nodelib") {
-      const serviceMode = "nodelib";
-      const serviceName = `${name}`;
-      await createLib({
-        name: serviceName,
-        mode: serviceMode,
+      const service_mode = "nodelib";
+      const service_name = `${name}`;
+      await create_lib({
+        name: service_name,
+        mode: service_mode,
       });
     } else if (mode === "rrn") {
-      const serviceMode = "rrn";
-      const serviceName = `${name}`;
-      await createLib({
-        name: serviceName,
-        mode: serviceMode,
+      const service_mode = "rrn";
+      const service_name = `${name}`;
+      await create_lib({
+        name: service_name,
+        mode: service_mode,
       });
     } else if (mode === "entity") {
-      await createLayer({
+      await create_layer({
         mode: "entities",
         name,
       });
     } else if (mode === "usecase") {
-      await createLayer({
+      await create_layer({
         mode: "usecases",
         name,
       });

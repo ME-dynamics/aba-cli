@@ -1,13 +1,13 @@
 import { createHash } from "crypto";
-import { IDbClient,  IRemove} from "../types";
+import { i_db_client,  i_remove} from "../types";
 
-export function buildRemove(args: IDbClient) {
+export function build_remove(args: i_db_client) {
   const { db } = args;
-  return function remove(info: IRemove): Promise<number> {
+  return function remove(info: i_remove): Promise<number> {
     return new Promise((resolve, reject) => {
-      const {  packageName } = info;
+      const {  package_name } = info;
       const sha1 = createHash("sha1");
-      const id = sha1.update(packageName).digest("hex");
+      const id = sha1.update(package_name).digest("hex");
       const doc = {
         _id: id,
       };

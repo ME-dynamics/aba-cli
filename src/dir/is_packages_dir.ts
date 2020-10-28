@@ -1,6 +1,6 @@
-import { IValidDirectory } from "../types"
+import { i_valid_directory } from "../types"
 
-export function isPackagesDir(fileList: string[]): IValidDirectory {
+export function is_packages_dir(file_list: string[]): i_valid_directory {
     const directories = [
       "entities",
       "controllers",
@@ -10,27 +10,27 @@ export function isPackagesDir(fileList: string[]): IValidDirectory {
       "schemas",
       "types",
     ];
-    const dirLength = directories.length;
+    const dir_length = directories.length;
     // should exactly match directories
-    if (fileList.length !== dirLength) {
+    if (file_list.length !== dir_length) {
       return {
-        validDir: false,
+        valid_dir: false,
         base: undefined,
         type: undefined,
       };
     }
-    for (let index = 0; index < dirLength; index++) {
-      if (!fileList.includes(directories[index])) {
+    for (let index = 0; index < dir_length; index++) {
+      if (!file_list.includes(directories[index])) {
         // all should exist
         return {
-          validDir: false,
+          valid_dir: false,
           base: undefined,
           type: undefined,
         };
       }
     }
     return {
-      validDir: true,
+      valid_dir: true,
       base: "packages",
       type: "service",
     };

@@ -1,22 +1,22 @@
 import nedb from "nedb";
 
-import { switchToRoot } from "../utils";
+import { switch_to_root } from "../utils";
 
-import { buildAdd } from "./add";
-import { buildRemove } from "./remove";
-import { buildFindById } from "./findById";
+import { build_add } from "./add";
+import { build_remove } from "./remove";
+import { build_find_by_id } from "./find_by_id";
 
 export async function db(serviceName: string) {
-  switchToRoot();
+  switch_to_root();
 
   const db = new nedb({
     filename: `./${serviceName}Db`,
     autoload: true,
     timestampData: true,
   });
-  const add = buildAdd({ db });
-  const findById = buildFindById({ db });
-  const remove = buildRemove({ db });
+  const add = build_add({ db });
+  const findById = build_find_by_id({ db });
+  const remove = build_remove({ db });
   return {
     add,
     findById,
