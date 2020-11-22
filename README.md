@@ -20,7 +20,7 @@ $ npm install -g aba-cli
 $ aba COMMAND
 running command...
 $ aba (-v|--version|version)
-aba-cli/0.2.0 linux-x64 node-v12.18.4
+aba-cli/0.2.1 linux-x64 node-v14.15.1
 $ aba --help [COMMAND]
 USAGE
   $ aba COMMAND
@@ -29,46 +29,43 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`aba add PACKAGENAME`](#aba-add-packagename)
+* [`aba add PACKAGE_NAME`](#aba-add-package_name)
 * [`aba audit`](#aba-audit)
-* [`aba autocomplete [SHELL]`](#aba-autocomplete-shell)
 * [`aba create MODE NAME`](#aba-create-mode-name)
 * [`aba help [COMMAND]`](#aba-help-command)
-* [`aba remove PACKAGENAME`](#aba-remove-packagename)
+* [`aba remove PACKAGE_NAME`](#aba-remove-package_name)
 
-## `aba add PACKAGENAME`
-
-adds packages to your project
+## `aba add PACKAGE_NAME`
 
 ```
 USAGE
-  $ aba add PACKAGENAME
+  $ aba add PACKAGE_NAME
 
 ARGUMENTS
-  PACKAGENAME  names of npm package you want to add to your nca project
+  PACKAGE_NAME  names of npm package you want to add to your nca project
 
 OPTIONS
-  -D, --dev          will save package info in development section
-  -a, --adapter      will save package info in adapter section
-  -c, --controllers  will save package info in controllers section
-  -e, --entity       will save package info in entities section
-  -g, --global       will save package info in global (global to current package) section
-  -i, --interface    will save package info in interface section
-  -n, --nodelib      will save package for node library
-  -u, --usecase      will save package info in usecase section
+  -D, --dev          saves package info in development section
+  -a, --adapter      saves package info in adapter section
+  -c, --controllers  saves package info in controllers section
+  -e, --entity       saves package info in entities section
+  -g, --global       saves package info in global (global to current package) section
+  -i, --interface    saves package info in interface section
+  -n, --nodelib      saves package for node library
+  -u, --usecase      saves package info in usecase section
 
 EXAMPLES
-  $ aba add -e entityPackage
-  $ aba add -a adapterPackage
-  $ aba add -u usecasePackage
-  $ aba add -c controllerPackage
-  $ aba add -i interfacePackage
-  $ aba add -g globalPackage
-  $ aba add -n nodelibPackage
-  $ aba add -D devPackage
+  $ aba add -e entity_package
+  $ aba add -a adapter_package
+  $ aba add -u usecase_package
+  $ aba add -c controller_package
+  $ aba add -i interface_package
+  $ aba add -g global_package
+  $ aba add -n nodelib_package
+  $ aba add -D dev_package
 ```
 
-_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/add.ts)_
 
 ## `aba audit`
 
@@ -87,34 +84,9 @@ OPTIONS
   -v, --verbose        Shows dependencies vulnerabilities in JSON format as well as response data
 ```
 
-_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/audit.ts)_
-
-## `aba autocomplete [SHELL]`
-
-display autocomplete installation instructions
-
-```
-USAGE
-  $ aba autocomplete [SHELL]
-
-ARGUMENTS
-  SHELL  shell type
-
-OPTIONS
-  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
-
-EXAMPLES
-  $ aba autocomplete
-  $ aba autocomplete bash
-  $ aba autocomplete zsh
-  $ aba autocomplete --refresh-cache
-```
-
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.2.0/src/commands/autocomplete/index.ts)_
+_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/audit.ts)_
 
 ## `aba create MODE NAME`
-
-creates node js clean architecture, nca layers, node libraries and react + react native project
 
 ```
 USAGE
@@ -125,20 +97,18 @@ ARGUMENTS
   NAME  the package / layer name you want to create
 
 EXAMPLES
-  $ aba create service serviceName
-  $ aba create nodelib libName
-  $ aba create rrn rrnName
-  $ aba create entity entityName
-  $ aba create usecase usecaseName
-  $ aba create adapter adapterName
-  $ aba create schema schemaName
+  $ aba create service service_name
+  $ aba create nodelib lib_name
+  $ aba create rrn rrn_name
+  $ aba create entity entity_name
+  $ aba create usecase usecase_name
+  $ aba create adapter adapter_name
+  $ aba create schema schema_name
 ```
 
-_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/create.ts)_
 
 ## `aba help [COMMAND]`
-
-display help for aba
 
 ```
 USAGE
@@ -153,20 +123,18 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.0/src/commands/help.ts)_
 
-## `aba remove PACKAGENAME`
-
-remove package from your nca project
+## `aba remove PACKAGE_NAME`
 
 ```
 USAGE
-  $ aba remove PACKAGENAME
+  $ aba remove PACKAGE_NAME
 
 ARGUMENTS
-  PACKAGENAME  name of npm module you want to remove from your nca / nodelib / rrn project
+  PACKAGE_NAME  name of npm module you want to remove from your nca / nodelib / rrn project
 
 EXAMPLE
-  $ aba remove packageName
+  $ aba remove package_name
 ```
 
-_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.0/src/commands/remove.ts)_
+_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/remove.ts)_
 <!-- commandsstop -->
