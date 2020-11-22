@@ -1,6 +1,6 @@
 import { join } from "path";
 import { mkdirSync } from "fs-extra";
-import { ErrorFactory } from "aba-utils";
+import { error_factory } from "aba-utils";
 
 /**
  * creates service directory
@@ -12,13 +12,12 @@ export async function create_dir(service_name: string) {
     const dir = join(current_dir, service_name);
     mkdirSync(dir);
   } catch (error) {
-    throw new ErrorFactory({
-      name: "fsError",
+    throw new error_factory({
+      name: "fs_error",
       message: "unable to create directory",
       detail: `unable to create ${current_dir} directory in ${service_name}`,
-      nativeError: error,
+      native_error: error,
       path: undefined,
-      timestamp: undefined
     });
   }
 }

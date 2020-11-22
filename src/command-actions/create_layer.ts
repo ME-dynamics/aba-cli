@@ -46,14 +46,20 @@ export async function create_layer(args: i_create_layer) {
       },
     ]);
     const usecase_file = usecase_layer(name);
-    const { controller_file, controller_name } = controller_layer(name, http_verb);
+    const { controller_file, controller_name } = controller_layer(
+      name,
+      http_verb
+    );
     const interface_file = interface_layer(controller_name, name);
     const usecase_path = path_to_layer("usecases");
     const controller_path = path_to_layer("controllers");
     const interface_path = path_to_layer("interfaces");
     try {
       writeFileSync(`${usecase_path}/${name}.ts`, usecase_file);
-      writeFileSync(`${controller_path}/${controller_name}.ts`, controller_file);
+      writeFileSync(
+        `${controller_path}/${controller_name}.ts`,
+        controller_file
+      );
       writeFileSync(`${interface_path}/${name}.ts`, interface_file);
       spinner.succeed(`${mode}: layer ${name} created`);
     } catch (error) {

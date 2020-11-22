@@ -1,6 +1,6 @@
 import { is_valid_directory } from "./is_valid_directory";
 import { join } from "path";
-import { ErrorFactory } from "aba-utils";
+import { error_factory } from "aba-utils";
 import { t_layers } from "../types";
 
 export function path_to_layer(layer: t_layers): string {
@@ -31,22 +31,20 @@ export function path_to_layer(layer: t_layers): string {
         return path;
       }
     }
-    throw new ErrorFactory({
-      name: "NCAError",
+    throw new error_factory({
+      name: "nca_error",
       message: "you should be at most four layers deep in nca projects",
       detail: "",
-      nativeError: undefined,
+      native_error: undefined,
       path: process.cwd(),
-      timestamp: undefined,
     });
   } else {
-    throw new ErrorFactory({
-        name: "NCAError",
+    throw new error_factory({
+        name: "nca_error",
         message: "you should be in nca project",
         detail: "",
-        nativeError: undefined,
+        native_error: undefined,
         path: process.cwd(),
-        timestamp: undefined
     })
   }
 }

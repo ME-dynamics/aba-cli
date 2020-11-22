@@ -1,7 +1,7 @@
 import { join } from "path";
 import { copy, remove } from "fs-extra";
 import { t_libraries } from "../types";
-import { ErrorFactory } from 'aba-utils';
+import { error_factory } from 'aba-utils';
 /**
  * because files from github are in folder named your-project-master
  * when downloaded from github, this will move it's files a level up
@@ -22,13 +22,12 @@ export async function move_template_files(service_name: string, mode: t_librarie
     // struggle to get move working, copy works just fine
     await remove(path);
   } catch (error) {
-    throw new ErrorFactory({
-      name: "fsError",
+    throw new error_factory({
+      name: "fs_error",
       message: "unable to move template file to root folder",
       detail: "",
-      nativeError: error,
+      native_error: error,
       path: process.cwd(),
-      timestamp: undefined
     })
   }
 }
