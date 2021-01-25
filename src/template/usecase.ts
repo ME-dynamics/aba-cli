@@ -2,7 +2,7 @@
 export function usecase_layer(name: string) {
 
   const usecase_file = `// import { } from "../entities";
-      // import { http_result ,result, error_factory, i_result} from "aba-utils";
+      // import { } from "aba-utils"; // import http_result_* modules that you need here 
       // import { } from "../types";
   
       export function build_${name.toLowerCase()} (args: any) {
