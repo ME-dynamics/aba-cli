@@ -1,13 +1,14 @@
-
 export function interface_layer(controller: string, usecase: string ) {
     return `import { ${controller} } from "../controllers";
-    import { t_request, t_reply } from "../types";
-    export async function ${usecase.toLowerCase()}(request: t_request, reply: t_reply){
+    import { types } from "aba-utils";
+    export async function ${usecase.toLowerCase()}(request: types.t_request, reply: types.t_reply){
         try {
             const response = await ${controller}(request);
-            // TODO: set status code, return response
+            reply.status(response.code);
+            reply.send(response);
         } catch(error) {
-            // TODO: set status code, return response
+            reply.status(error.code);
+            reply.send(error);
         }
     }`
 }
