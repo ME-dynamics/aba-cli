@@ -1,5 +1,5 @@
 
-export type t_libraries = "service" | "nodelib" | "rrn";
+export type t_libraries = "service" | "nodelib";
 
 export interface i_create_lib {
   name: string;
