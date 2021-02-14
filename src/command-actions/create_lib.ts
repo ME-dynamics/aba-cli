@@ -9,13 +9,13 @@ import {
 } from "../utils";
 import { update_package_json, yarn_client } from "../package-manager";
 import { join } from "path";
-import { error_factory } from "aba-utils";
+import { Error_Factory } from "aba-utils";
 
 async function create_lib_directory(name: string) {
   try {
     await create_dir(name);
   } catch (error) {
-    throw new error_factory({
+    throw new Error_Factory({
       name: "fsError",
       message: `unable to create ${name} directory`,
       detail: "",
@@ -34,7 +34,7 @@ async function downloading_template(
     if (file) {
       return file;
     } else {
-      throw new error_factory({
+      throw new Error_Factory({
         name: "IOError",
         message: `unable to download ${lib_title} from github`,
         detail: "",
@@ -43,7 +43,7 @@ async function downloading_template(
       });
     }
   } catch (error) {
-    throw new error_factory({
+    throw new Error_Factory({
       name: "IOError",
       message: `unable to download ${lib_title} from github`,
       detail: "",
@@ -57,7 +57,7 @@ async function unzip_template(template_file: Buffer, name: string) {
   try {
     await unzip(template_file, name);
   } catch (error) {
-    throw new error_factory({
+    throw new Error_Factory({
       name: "fsError",
       message: `unable to unzip template file`,
       detail: "",
@@ -71,7 +71,7 @@ async function move_master_branch_to_root(name: string, mode: t_libraries) {
   try {
     await move_template_files(name, mode);
   } catch (error) {
-    throw new error_factory({
+    throw new Error_Factory({
       name: "fsError",
       message: `unable to move template files`,
       detail: "",
@@ -85,7 +85,7 @@ async function update_package_info(name: string, lib_title: string) {
   try {
     await update_package_json(name, lib_title);
   } catch (error) {
-    throw new error_factory({
+    throw new Error_Factory({
       name: "fsError",
       message: `unable to update package json file`,
       detail: "",
@@ -102,7 +102,7 @@ async function install_packages(name: string) {
     process.chdir(path);
     await yarn_client.install();
   } catch (error) {
-    throw new error_factory({
+    throw new Error_Factory({
       name: "yarnError",
       message: `unable to install node modules`,
       detail: "",

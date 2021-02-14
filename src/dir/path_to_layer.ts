@@ -1,6 +1,6 @@
 import { is_valid_directory } from "./is_valid_directory";
 import { join } from "path";
-import { error_factory } from "aba-utils";
+import { Error_Factory } from "aba-utils";
 import { t_layers } from "../types";
 
 export function path_to_layer(layer: t_layers): string {
@@ -31,7 +31,7 @@ export function path_to_layer(layer: t_layers): string {
         return path;
       }
     }
-    throw new error_factory({
+    throw new Error_Factory({
       name: "nca_error",
       message: "you should be at most four layers deep in nca projects",
       detail: "",
@@ -39,7 +39,7 @@ export function path_to_layer(layer: t_layers): string {
       path: process.cwd(),
     });
   } else {
-    throw new error_factory({
+    throw new Error_Factory({
         name: "nca_error",
         message: "you should be in nca project",
         detail: "",
