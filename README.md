@@ -20,7 +20,7 @@ $ npm install -g aba-cli
 $ aba COMMAND
 running command...
 $ aba (-v|--version|version)
-aba-cli/0.2.1 linux-x64 node-v14.15.1
+aba-cli/0.2.2 linux-x64 node-v14.15.5
 $ aba --help [COMMAND]
 USAGE
   $ aba COMMAND
@@ -65,7 +65,7 @@ EXAMPLES
   $ aba add -D dev_package
 ```
 
-_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.2/src/commands/add.ts)_
 
 ## `aba audit`
 
@@ -84,7 +84,7 @@ OPTIONS
   -v, --verbose        Shows dependencies vulnerabilities in JSON format as well as response data
 ```
 
-_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/audit.ts)_
+_See code: [src/commands/audit.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.2/src/commands/audit.ts)_
 
 ## `aba create MODE NAME`
 
@@ -106,7 +106,7 @@ EXAMPLES
   $ aba create schema schema_name
 ```
 
-_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.2/src/commands/create.ts)_
 
 ## `aba help [COMMAND]`
 
@@ -136,5 +136,5 @@ EXAMPLE
   $ aba remove package_name
 ```
 
-_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.1/src/commands/remove.ts)_
+_See code: [src/commands/remove.ts](https://github.com/eyousefifar/aba-cli/blob/v0.2.2/src/commands/remove.ts)_
 <!-- commandsstop -->
