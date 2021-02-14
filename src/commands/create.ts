@@ -57,10 +57,11 @@ export default class Create extends Command {
     } else if (mode === "rrn") {
       const service_mode = "rrn";
       const service_name = `${name}`;
-      await create_lib({
-        name: service_name,
-        mode: service_mode,
-      });
+      // await create_lib({
+      //   name: service_name,
+      //   mode: service_mode,
+      // });
+      this.warn("will just focus on node js for now, expo will be integrated later")
     } else if (mode === "entity") {
       await create_layer({
         mode: "entities",

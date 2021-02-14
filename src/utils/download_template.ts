@@ -12,8 +12,8 @@ export async function download_template(
     "https://github.com/eyousefifar/nodelib-template/archive/master.zip";
   const nca_url =
     "https://github.com/eyousefifar/nca-template/archive/master.zip";
-  const rrn_url =
-    "https://github.com/eyousefifar/rrn-template/archive/master.zip";
+  // const rrn_url =
+  //   "https://github.com/eyousefifar/rrn-template/archive/master.zip";
 
   try {
     let url;
@@ -23,9 +23,6 @@ export async function download_template(
         break;
       case "nodelib":
         url = nodelib_url;
-        break;
-      case "rrn":
-        url = rrn_url;
         break;
       default:
         throw new Error(`mode: ${mode} is not valid`);
