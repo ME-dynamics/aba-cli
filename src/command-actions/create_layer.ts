@@ -11,6 +11,13 @@ import { path_to_layer } from "../dir";
 import { terminate_with_error } from "../utils";
 import { i_create_layer } from "../types";
 
+
+/**
+ * generates files for node clean architecture. creates entity, usecase with its controller and interface.
+ * also generate template for adapters and schemas. 
+ * @param args object containing layer mode and name,
+ * mode is entity, usecase, adapters and schemas
+ */
 export async function create_layer(args: i_create_layer) {
   const { mode, name } = args;
   const layer_path = path_to_layer(mode);
